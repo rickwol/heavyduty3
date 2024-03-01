@@ -5,7 +5,16 @@ import plotly.express as px
 import datetime, timedelta
 import requests
 from datetime import date
-
+st.markdown(
+    """
+<style>
+    [data-testid="collapsedControl"] {
+        display: none
+    }
+</style>
+""",
+    unsafe_allow_html=True,
+)
 
 download = requests.get("https://capaciteitskaart.netbeheernederland.nl/dashboard/download")
 today = date.today()
