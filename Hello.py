@@ -24,7 +24,16 @@ show_pages(
        
     ]
 )
-
+st.markdown(
+    """
+<style>
+    [data-testid="collapsedControl"] {
+        display: none
+    }
+</style>
+""",
+    unsafe_allow_html=True,
+)
 
 from streamlit_extras.switch_page_button import switch_page
 st.title("Welkom bij de Heavy Duty elektrificatie tool")
