@@ -7,7 +7,16 @@ from streamlit_extras.switch_page_button import switch_page
 from Functions import *
 
 st.set_page_config(page_title="Ritprofielen", page_icon="📈", initial_sidebar_state="collapsed")
-
+st.markdown(
+    """
+<style>
+    [data-testid="collapsedControl"] {
+        display: none
+    }
+</style>
+""",
+    unsafe_allow_html=True,
+)
 #st.sidebar.header("Ritprofielen")
 
 st.title("Heavy Duty Elektrificatie tool")
