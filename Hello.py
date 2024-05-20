@@ -17,6 +17,7 @@ show_pages(
         #Page("Pages/05_Laadprofiel_segment.py", "Ritprofiel Per Segment"),
         Page("Pages/06_Resultaten.py", "Voertuig keuze"),
         Page("Pages/09_ResultatenMeerdere.py", "Meerdere Voertuig keuze"),
+        Page("Pages/10_Resultaten_Meerdere_Aanpassen.py", "Opties"), 
         Page("Pages/07_Laadprofiel.py", "Laadprofiel"),
         Page("Pages/08_Netaansluiting.py", "Netaansluiting"),
         #Page("Pages/06_Financieel.py", "Financieel overzicht"),
@@ -24,6 +25,8 @@ show_pages(
        
     ]
 )
+
+
 st.markdown(
     """
 <style>
@@ -34,6 +37,7 @@ st.markdown(
 """,
     unsafe_allow_html=True,
 )
+
 
 from streamlit_extras.switch_page_button import switch_page
 st.title("Welkom bij de Heavy Duty elektrificatie tool")
