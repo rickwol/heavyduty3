@@ -3,21 +3,11 @@ import pandas as pd
 import numpy as np
 import plotly.express as px 
 import datetime, timedelta
-import openpyxl
 #from mitosheet.streamlit.v1 import spreadsheet
 from streamlit_extras.switch_page_button import switch_page
 
 st.set_page_config(page_title="Ritprofielen meerdere voertuigen", page_icon="📈", initial_sidebar_state="collapsed")
-st.markdown(
-    """
-<style>
-    [data-testid="collapsedControl"] {
-        display: none
-    }
-</style>
-""",
-    unsafe_allow_html=True,
-)
+
 #st.sidebar.header("Ritprofielen")
 
 st.title("Heavy Duty Elektrificatie tool")
@@ -33,7 +23,16 @@ if DataFrame is not None:
     DataFrame2 = pd.read_excel(DataFrame, converters={'Starttijd': str,'eindtijd': str} )
     st.session_state.df_value = DataFrame2
 
-if st.button("Volgende"):
-    switch_page("meerdere voertuig keuze")
+col1, col2, = st.columns(2)
+
+with col1:
+    if st.button("Vorige"):
+        switch_page("input")
+    
+with col2:
+    if st.button("Volgende"):
+        switch_page("meerdere voertuig keuze")    
+
+    
 
 

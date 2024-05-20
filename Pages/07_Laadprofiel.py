@@ -6,16 +6,7 @@ import datetime, timedelta
 from streamlit_extras.switch_page_button import switch_page
 
 st.set_page_config(page_title="Laadprofiel", page_icon="📈", initial_sidebar_state="collapsed")
-st.markdown(
-    """
-<style>
-    [data-testid="collapsedControl"] {
-        display: none
-    }
-</style>
-""",
-    unsafe_allow_html=True,
-)
+
 #st.sidebar.header("Ritprofielen")
 
 st.title("Heavy Duty Elektrificatie tool")
@@ -39,9 +30,13 @@ fig = px.line(df2, x="Tijdstip", y="Load(kW)", title= "Laadprofiel")
 
 
 st.plotly_chart(fig)
-
-if st.button("Volgende"):
-    switch_page("netaansluiting")
+col3, col4 = st.columns(2)
+with col3:
+    if st.button("Vorige"):
+        switch_page("opties")
+with col4:
+    if st.button("Volgende"):
+        switch_page("netaansluiting")
 
 
 if "maxvermogen" not in st.session_state:

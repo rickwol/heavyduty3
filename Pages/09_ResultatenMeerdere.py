@@ -7,16 +7,7 @@ from streamlit_extras.switch_page_button import switch_page
 from Functions import *
 
 st.set_page_config(page_title="Ritprofielen", page_icon="📈", initial_sidebar_state="collapsed")
-st.markdown(
-    """
-<style>
-    [data-testid="collapsedControl"] {
-        display: none
-    }
-</style>
-""",
-    unsafe_allow_html=True,
-)
+
 #st.sidebar.header("Ritprofielen")
 
 st.title("Heavy Duty Elektrificatie tool")
@@ -60,10 +51,10 @@ st.text("Gebruik deze input voor een verkenning van welke specifieke truck dit k
 url = "https://globaldrivetozero.org/tools/zeti/"
 st.write("Klik [hier](%s) voor de tool" % url)
 
-if st.button("Volgende"):
-    switch_page("laadprofiel")
-
 col1, col2, = st.columns(2)
+
+
+
 with col1:
     st.header("Alleen depot laden")
     st.image("https://media.istockphoto.com/id/1306857153/nl/foto/het-laadstation-van-elektrische-voertuigen-op-een-achtergrond-van-een-vrachtwagen.jpg?s=612x612&w=0&k=20&c=kF5jroBqGmPsn_6zup2ahw1R2W6xNb6dNibQqlf-KGM=")
@@ -96,16 +87,25 @@ with col2:
             andereritten = ritdata2["KM"].tail(-1).max()#/0.8
         else:
             andereritten = rit1
-        kilometers = float(np.maximum(rit1, andereritten)) ###Maximum van alle ritten
+        kilometers = ritdata2.KMber.max() ###Maximum van alle ritten
         kilomterssom = ritdata["KM"].sum() ###Totaalkilometers
         energieonderweg = int(kilometers/0.7 * verbruik)
         energiedepot = int(kilomterssom/0.7 * verbruik)
-        oplaaddepot = int(np.round(ritdata["laadsnelheid"].tail(1)))
+        oplaaddepot = int(np.round(ritdata2["laadsnelheid"].tail(1)))
         tekst = "Voor voertuig " + str(x+1)
         st.subheader(tekst)
         st.write("Accu:", str(np.round(energieonderweg)), "kWh")
         st.write("Range:", str(np.round(kilometers)),"km")
-        st.write("Oplaadcapaciteit: ", str(int(np.round(ritdata["laadsnelheid"].max()))), "kW")
+        st.write("Oplaadcapaciteit: ", str(int(np.round(ritdata2["laadsnelheid"].max()))), "kW")
+
+with col1:
+    if st.button("Vorige"):
+        switch_page("ritprofiel_gemiddeld")
+    
+with col2:
+    if st.button("Volgende"):
+        switch_page("opties")  
+    
 
         
 if truckinput == 'Frequent laden':
@@ -134,4 +134,6 @@ else:
     profielsum["laadsnelheid"] = np.where(profielsum["Tijdlijst"] > "1900-01-02 05:00", 0, profielsum["laadsnelheid"] )
 
 
+    
+st.session_state.ritdata2 = ritdata
 st.session_state.profielsum = profielsum

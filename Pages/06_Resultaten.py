@@ -7,16 +7,7 @@ from streamlit_extras.switch_page_button import switch_page
 from Functions2 import *
 
 st.set_page_config(page_title="Ritprofielen", page_icon="📈", initial_sidebar_state="collapsed")
-st.markdown(
-    """
-<style>
-    [data-testid="collapsedControl"] {
-        display: none
-    }
-</style>
-""",
-    unsafe_allow_html=True,
-)
+
 #st.sidebar.header("Ritprofielen")
 
 st.title("Heavy Duty Elektrificatie tool")
@@ -93,7 +84,13 @@ with st.expander("Zie specificaties"):
     accu = st.number_input('Accu (kWh)', value= energiedepot)
     accu = st.number_input('Oplaadvermogen (kW)', value= oplaaddepot)
 
+with col1:
+    if st.button("Vorige"):
+        switch_page("in_app_input")
     
+with col2:
+    if st.button("Volgende"):
+        switch_page("laadprofiel")  
     
 if st.button("Volgende"):
     switch_page("laadprofiel")

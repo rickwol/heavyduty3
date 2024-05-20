@@ -6,6 +6,7 @@ import datetime, timedelta
 from streamlit_extras.switch_page_button import switch_page
 
 st.set_page_config(page_title="Inappinvoer", page_icon="📈", initial_sidebar_state="collapsed")
+
 st.markdown(
     """
 <style>
@@ -128,6 +129,12 @@ if edited_df is not None and not edited_df.equals(st.session_state["df_value"]):
     update(edited_df)
     st.session_state["df_value"] = edited_df
 
+col1, col2, = st.columns(2)
+
+with col1:
+    if st.button("Vorige"):
+        switch_page("input")
     
-if st.button("Volgende"):
-    switch_page("voertuig keuze")
+with col2:
+    if st.button("Volgende"):
+        switch_page("voertuig keuze")
