@@ -98,7 +98,7 @@ with col2:
 #st.write(accuvoertuig_1)             
 #st.dataframe(ritdata)
 ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata)
-st.session_state.ritdata2 = ritdata3
+st.session_state.ritdata3 = ritdata3
 st.session_state.profielsum = profielsum
 
 col3, col4 = st.columns(2)
