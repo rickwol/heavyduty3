@@ -39,9 +39,9 @@ st.markdown(
 )
 
 
-from streamlit_extras.switch_page_button import switch_page
-st.title("Welkom bij de Heavy Duty elektrificatie tool")
 
+st.title("Welkom bij de Heavy Duty elektrificatie tool")
+from streamlit_extras.switch_page_button import switch_page
 st.markdown(
     """
     De tool voor een geïntegreerd advies voor elektrische logistiek. Op basis van ritgegevens krijgt u een advies over de keuze voor elektrische trucks en de bijbehorende laadinfrastructuur. 
@@ -54,5 +54,8 @@ st.markdown(
 """
 )
 
-if st.button("Volgende"):
+#st.page_link("pages/02_InAppInput.py", label = "Input")
+
+if st.button("Start"):
     switch_page("input")
+    

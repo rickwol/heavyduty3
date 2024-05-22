@@ -38,7 +38,7 @@ def RitDataMeerdere(ritdata, voertuig):
     ritdata["Endtime"] = pd.to_datetime(ritdata["Eindtijd"], format = '%H:%M')
 
     maxi = len(ritdata["Starttime"]) - 1
-    mini = ritdata["Starttime"].min() + datetime.timedelta(days=1)
+    mini = ritdata["Endtime"].max() + datetime.timedelta(hours=8)
 
     ritdata["Verbruik"] = 1.2 ###1.2 voertuig verbruik
 
@@ -65,8 +65,7 @@ def RitDataMeerdere(ritdata, voertuig):
             ritdata["Tijdlijst"][z] =list(pd.date_range(ritdata["Endtime"][z], ritdata["Starttime"][z+1] ,freq='5T'))
         else:
             ritdata["Tijdlijst"][z] =list(pd.date_range(ritdata["Endtime"][z], mini ,freq='5T'))
-
-    ritdata["Tijdlijst"][maxi] = ritdata["Tijdlijst"][maxi] =list(pd.date_range(ritdata["Endtime"][maxi], mini ,freq='5T'))
+    
 
 
     # ####Ritdata check accu
@@ -77,6 +76,10 @@ def RitDataMeerdere(ritdata, voertuig):
     ritdata["Energieopladen"] = np.where(ritdata["laadsnelheid"] > 0, ritdata["difftime"] * ritdata["laadsnelheid"], 0)
     ritdata["Accu"] = ritdata.groupby(["VoertuigNr"])["KMber"].transform('max')
     ritdata["Accu"] = np.where(ritdata["Rit Nr"] == 1, (ritdata["Accu"]/0.7) * voertuig, 0)
+    
+    ###Update profiel laatste rit
+    mini = ritdata["Endtime"].max() + datetime.timedelta(hours= ritdata["Energieopladen"][maxi]/ritdata["laadsnelheid"].max())
+    ritdata["Tijdlijst"][maxi] = ritdata["Tijdlijst"][maxi] =list(pd.date_range(ritdata["Endtime"][maxi], mini ,freq='5T'))
 
     #ritdata["Accu"] = ritdata["Accu"].shift(-1) + ritdata["EnergieVerbruik"] + ritdata["Energieopladen"]
 
@@ -130,9 +133,39 @@ def RitDataMeerdereAanpassen(ritdata):
             ritdata["Accu"][x] = ritdata["Accu"][x] + ritdata["EnergieVerbruik"][x]
         else:
             ritdata["Accu"][x] = ritdata["Accu"][x-1] + ritdata["EnergieVerbruik"][x] + ritdata["Energieopladen"][x]
+            if ritdata["Accu"][x] > ritdata['Accumax'][x]:
+                ritdata["Energieopladen"][x] =  ritdata['Accumax'][x] - ritdata["Accu"][x-1] + ritdata["EnergieVerbruik"][x]
+            ritdata["Accu"] = np.where(ritdata["Accu"] > ritdata['Accumax'],ritdata['Accumax'], ritdata["Accu"])
 
-    ritdata["Accu"] = np.where(ritdata["Accu"] > ritdata['Accumax'],ritdata['Accumax'], ritdata["Accu"])
 
     profielsum = pd.DataFrame(profiel.groupby(["Tijdlijst"]).laadsnelheid.sum()).reset_index()
     
     return ritdata, profiel, profielsum
+
+
+def profielsummaken(ritdata):
+    
+    import pandas as pd
+    import numpy as np
+    import datetime
+    import streamlit as st
+    
+    ritdata["Starttime"] = pd.to_datetime(ritdata["Starttijd"], format = '%H:%M')
+    ritdata["Endtime"] = pd.to_datetime(ritdata["Eindtijd"], format = '%H:%M')
+    
+    maxi = len(ritdata["Starttime"]) - 1
+    mini = ritdata["Starttime"].min() + datetime.timedelta(days=1)
+    ritdata["Tijdlijst"] = 0
+    for z in range(len(ritdata["Starttime"])-1):
+        if (ritdata["Endtime"][z] < ritdata["Starttime"][z+1]):
+            ritdata["Tijdlijst"][z] =list(pd.date_range(ritdata["Endtime"][z], ritdata["Starttime"][z+1] ,freq='5T'))
+        else:
+            ritdata["Tijdlijst"][z] =list(pd.date_range(ritdata["Endtime"][z], mini ,freq='5T'))
+
+    ritdata["Tijdlijst"][maxi] =list(pd.date_range(ritdata["Endtime"][maxi], mini ,freq='5T'))
+    
+    profiel = pd.DataFrame(ritdata.explode(["Tijdlijst"]).reset_index())
+    profielsum = pd.DataFrame(profiel.groupby(["Tijdlijst"]).laadsnelheid.sum()).reset_index()
+    
+    return  profielsum
+    
