@@ -6,6 +6,18 @@ import datetime, timedelta
 import requests
 from datetime import date
 
+st.markdown(
+    """
+<style>
+    [data-testid="collapsedControl"] {
+        display: none
+    }
+    .reportview-container .main .block-container{{f"max-width: 1000px;"
+    }}
+
+</style>
+""",
+    unsaf
 
 download = requests.get("https://capaciteitskaart.netbeheernederland.nl/dashboard/download")
 today = date.today()
