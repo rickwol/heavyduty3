@@ -13,10 +13,14 @@ st.markdown(
     [data-testid="collapsedControl"] {
         display: none
     }
+    .reportview-container .main .block-container{{f"max-width: 1000px;"
+    }}
+
 </style>
 """,
     unsafe_allow_html=True,
 )
+
 #st.sidebar.header("Ritprofielen")
 
 st.title("Heavy Duty Elektrificatie tool")
@@ -71,12 +75,15 @@ with st.expander("Zie specificaties"):
 ###Store inputs in session state
 if "voertuig" not in st.session_state:
     st.session_state.voertuig = verbruikvoertuig
-    st.experimental_rerun()
+    st.rerun()
 if "opties" not in st.session_state:
     st.session_state.opties = verbruikopties
-    st.experimental_rerun()
-
-Aantalritten =  st.number_input('Hoeveel ritten op 1 dag?', step = 1, min_value= 3) -1
+    st.rerun()
+if "typevoertuig" not in st.session_state:
+    st.session_state.typevoertuig = voertuig
+    st.rerun()
+    
+Aantalritten =  st.number_input('Hoeveel ritten op 1 dag?', step = 1, min_value= 5) -3
 
 ###Standaard Dataframe
 df = pd.DataFrame(
@@ -93,12 +100,12 @@ df = pd.DataFrame(
 ###Bepaal aantal ritten
 if(Aantalritten > 0):
     for z in range(Aantalritten):
-        df = df.append({"Nummer rit": z+2,"Starttijd Rit": "8:00", 'Eindtijd Rit' : "9:45", "Aantal kilometers": 10, "Kan laden op einde rit" : True, "Locatie einde rit: (Depot of Anders)" : "Depot"}, ignore_index=True)
+        df = df.append({"Nummer rit": z+4,"Starttijd Rit": "8:00", 'Eindtijd Rit' : "9:45", "Aantal kilometers": 10, "Kan laden op einde rit" : True, "Locatie einde rit: (Depot of Anders)" : "Depot"}, ignore_index=True)
 
 ###Store dataframe in session state
 if "df_value" not in st.session_state:
     st.session_state.df_value = df
-    st.experimental_rerun()
+    st.rerun()
 
 
 
@@ -131,7 +138,7 @@ if edited_df is not None and not edited_df.equals(st.session_state["df_value"]):
     # 2. The new dataframe value is different from the old value
     update(edited_df)
     st.session_state["df_value"] = edited_df
-    st.experimental_rerun()
+    st.rerun()
 
 col1, col2, = st.columns(2)
 

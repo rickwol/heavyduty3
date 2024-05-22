@@ -14,7 +14,15 @@ st.title("Heavy Duty Elektrificatie tool")
 
 ritdata = st.session_state.ritdata2
 st.write("Op deze pagina kunt u de technische specificaties naar uw wens aanpassen. Per voertuig staan reeds de berekende ideale waardes ingevuld.") 
-#st.dataframe(ritdata)
+
+
+if st.session_state.laadkeuze != 'Frequent laden':
+    ritdata = st.session_state["df_value"]
+    ritdata["Kan laden op einde rit"] = "Nee"
+    ritdata["Kan laden op einde rit"] = np.where((ritdata["VoertuigNr"].shift(-1) != ritdata["VoertuigNr"]), "Ja", ritdata["Kan laden op einde rit"])
+    verbruik=1.2
+    ritdata, profiel, profielsum = RitDataMeerdere(ritdata, verbruik)
+    
 #st.dataframe(ritdata)
 col1, col2 = st.columns(2)
 
@@ -52,11 +60,12 @@ with col1:
                 exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "laadsnelheid"] = laadvoertuig_{x}')
                 ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata)
                 ritdata4 = ritdata3[ritdata3["VoertuigNr"] == x+1].reset_index(drop=True)
+                st.dataframe(ritdata4)
                 if ritdata4["Accu"].min() < 0:
                     st.write(":red[Met deze combinatie van specificaties kunt u uw ritten **niet** uitvoeren]")
                 else:
                     st.write(":green[Met deze combinatie van specificaties kunt u uw ritten **wel** uitvoeren]")
-        
+                
 with col2:
     for x in range(ritdata["VoertuigNr"].nunique()):
         ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
@@ -99,9 +108,8 @@ with col2:
 #st.dataframe(ritdata)
 ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata)
 st.session_state.ritdata3 = ritdata3
-st.experimental_rerun()
 st.session_state.profielsum = profielsum
-st.experimental_rerun()
+
 
 col3, col4 = st.columns(2)
 with col3:
@@ -111,3 +119,5 @@ with col3:
 with col4:
     if st.button("Volgende"):
         switch_page("laadprofiel")  
+        
+st.rerun()

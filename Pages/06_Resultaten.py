@@ -5,6 +5,7 @@ import plotly.express as px
 import datetime, timedelta
 from streamlit_extras.switch_page_button import switch_page
 from Functions2 import *
+from Functions import *
 
 st.set_page_config(page_title="Ritprofielen", page_icon="📈", initial_sidebar_state="collapsed")
 
@@ -20,9 +21,9 @@ st.title("Heavy Duty Elektrificatie tool")
 #         else:
 #             ritdata = st.session_state["df_value"]
 
-ritdata = st.session_state["df_value"]
+ritdataenkel = st.session_state["df_value"]
 
-ritdata = RitDataEnkele(ritdata, st.session_state.voertuig)
+ritdata = RitDataEnkele(ritdataenkel, st.session_state.voertuig)
                                     
 rit1 =  ritdata["Aantal kilometers"].head(1)
 if ritdata["Aantal kilometers"].shape[0]>1:
@@ -38,7 +39,7 @@ energiedepot = int(kilomterssom/0.7 * st.session_state.voertuig)
 
 oplaaddepot = int(np.round(ritdata["laadsnelheid"].tail(1)))
 
-st.dataframe(ritdata)
+#st.dataframe(ritdata)
 
 st.write("Op basis van uw input zijn dit twee trucks in combinatie met laadpalen afhankelijk van de laadstrategie")
 
@@ -78,19 +79,42 @@ url = "https://globaldrivetozero.org/tools/zeti/"
 st.write("Klik [hier](%s) voor de tool" % url)
 
 #truckinput = st.selectbox("Welke optie kiest u?", ("Alleen depot laden",  "Frequent laden"))
+if truckinput == 'Frequent laden':
+    accu = energieonderweg
+else:
+    accu = energiedepot
+if truckinput == 'Frequent laden':
+    snelheid = np.round(ritdata["laadsnelheid"].max()).astype(int)
+else: 
+    snelheid = oplaaddepot
+
 
 st.write("Afhankelijk van uw laadstrategie nemen we uw voertuigspecificaties mee. Wilt uw toch iets anders invullen dan kan dit hieronder")
 with st.expander("Zie specificaties"):
-    accu = st.number_input('Accu (kWh)', value= energiedepot)
-    accu = st.number_input('Oplaadvermogen (kW)', value= oplaaddepot)
+    accu = st.number_input('Accu (kWh)', value= accu)
+    accu = st.number_input('Oplaadvermogen (kW)', value= snelheid)
 
-with col1:
+###Aanpassen dataframe
+ritdataenkel1 = ritdataenkel
+ritdataenkel1["Starttijd"] = ritdataenkel1["Starttijd Rit"]
+ritdataenkel1["Eindtijd"] = ritdataenkel1["Eindtijd Rit"]
+ritdataenkel1["VoertuigNr"] = 1
+ritdataenkel1["Type voertuig"] =  st.session_state.typevoertuig
+ritdataenkel1["KM"] = ritdataenkel1["Aantal kilometers"]
+ritdataenkel1["Rit Nr"] = ritdataenkel1["Nummer rit"] 
+
+#st.dataframe(ritdataenkel1)
+
+profielsum = profielsummaken(ritdataenkel1) 
+
+st.session_state.profielsum = profielsum
+
+col3, col4 = st.columns(2)    
+    
+with col3:
     if st.button("Vorige"):
         switch_page("in_app_input")
     
-with col2:
+with col4:
     if st.button("Volgende"):
         switch_page("laadprofiel")  
-    
-if st.button("Volgende"):
-    switch_page("laadprofiel")

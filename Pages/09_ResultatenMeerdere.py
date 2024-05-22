@@ -21,11 +21,11 @@ st.title("Heavy Duty Elektrificatie tool")
 #             ritdata = st.session_state["df_value"]
 
 ritdata = st.session_state["df_value"]
-
-ritdata, profiel, profielsum = RitDataMeerdere(ritdata, 1.2)
+verbruik=1.2
+ritdata, profiel, profielsum = RitDataMeerdere(ritdata, verbruik)
 
 profielsum.laadsnelheid.max()
-verbruik=1.2
+
 st.write("Op basis van uw input zijn dit twee mogelijke laadstrategieën met configuraties van uw trucks")
 radio_markdown = '''
 Maak uw keuze uit twee laadstrategieën
@@ -41,10 +41,6 @@ Maak uw keuze uit twee laadstrategieën
 truckinput = st.radio(
     'Kies hier uw laadstrategie',
     ('Depot laden                 ', 'Frequent laden'),horizontal = True, help=radio_markdown)
-
-
-
-        
 
 
 st.text("Gebruik deze input voor een verkenning van welke specifieke truck dit kan zijn in de ZETI tool:")
@@ -132,8 +128,11 @@ else:
     timemax = str(ritdata["Starttime"].max())
     profielsum["laadsnelheid"] = np.where(profielsum["Tijdlijst"] > timemax, oplaaddepotsum, 0)
     profielsum["laadsnelheid"] = np.where(profielsum["Tijdlijst"] > "1900-01-02 05:00", 0, profielsum["laadsnelheid"] )
+    
+    
 
 
     
 st.session_state.ritdata2 = ritdata
 st.session_state.profielsum = profielsum
+st.session_state.laadkeuze = truckinput
