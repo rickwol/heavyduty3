@@ -99,7 +99,9 @@ with col2:
 #st.dataframe(ritdata)
 ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata)
 st.session_state.ritdata3 = ritdata3
+st.experimental_rerun()
 st.session_state.profielsum = profielsum
+st.experimental_rerun()
 
 col3, col4 = st.columns(2)
 with col3:

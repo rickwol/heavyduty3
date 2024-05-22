@@ -71,8 +71,10 @@ with st.expander("Zie specificaties"):
 ###Store inputs in session state
 if "voertuig" not in st.session_state:
     st.session_state.voertuig = verbruikvoertuig
+    st.experimental_rerun()
 if "opties" not in st.session_state:
     st.session_state.opties = verbruikopties
+    st.experimental_rerun()
 
 Aantalritten =  st.number_input('Hoeveel ritten op 1 dag?', step = 1, min_value= 3) -1
 
@@ -96,6 +98,7 @@ if(Aantalritten > 0):
 ###Store dataframe in session state
 if "df_value" not in st.session_state:
     st.session_state.df_value = df
+    st.experimental_rerun()
 
 
 
@@ -128,6 +131,7 @@ if edited_df is not None and not edited_df.equals(st.session_state["df_value"]):
     # 2. The new dataframe value is different from the old value
     update(edited_df)
     st.session_state["df_value"] = edited_df
+    st.experimental_rerun()
 
 col1, col2, = st.columns(2)
 
