@@ -57,5 +57,5 @@ st.markdown(
 #st.page_link("pages/02_InAppInput.py", label = "Input")
 
 if st.button("Start"):
-    st.page_link("https://gtdetooling.streamlit.app/Input")
+    st.page_link("https://gtdetooling.streamlit.app/Input", label="Start")
     
