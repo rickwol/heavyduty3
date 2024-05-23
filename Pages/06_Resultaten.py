@@ -20,7 +20,8 @@ st.markdown(
 
 </style>
 """,
-    unsaf
+    unsafe_allow_html=True,
+)
 
 #st.sidebar.header("Ritprofielen")
 
