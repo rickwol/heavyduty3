@@ -17,7 +17,8 @@ st.markdown(
 
 </style>
 """,
-    unsaf
+    unsafe_allow_html=True,
+)
 
 download = requests.get("https://capaciteitskaart.netbeheernederland.nl/dashboard/download")
 today = date.today()
