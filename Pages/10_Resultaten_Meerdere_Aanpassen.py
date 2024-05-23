@@ -78,7 +78,7 @@ with col1:
                     st.write(":red[Met deze combinatie van specificaties kunt u uw ritten **niet** uitvoeren]")
                 else:
                     st.write(":green[Met deze combinatie van specificaties kunt u uw ritten **wel** uitvoeren]")
-                if st.number_input("Laadsnelheid (kW)", value= np.round(ritdata2["laadsnelheid"].max()).astype(int), key= keylaad)/st.number_input("Accu capaciteit (kWh)", value= np.round(ritdata2["Accu"].max()).astype(int), key= keyaccu)' > 8:
+                if st.number_input("Laadsnelheid (kW)", value= np.round(ritdata2["laadsnelheid"].max()).astype(int), key= keylaad)/st.number_input("Accu capaciteit (kWh)", value= np.round(ritdata2["Accu"].max()).astype(int), key= keyaccu) > 8:
                     st.write(":red[Met deze combinatie van specificaties kan uw voertuig niet opladen. De laadsnelheid is te hoog]")
 
 
