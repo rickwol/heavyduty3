@@ -24,11 +24,11 @@ if st.session_state.laadkeuze != 'Frequent laden':
     ritdata, profiel, profielsum = RitDataMeerdere(ritdata, verbruik)
     
 #st.dataframe(ritdata)
-col1, col2 = st.columns(2)
+col5, col6 = st.columns(2)
 
 voertuig ='Grote bakwagen lvm > 18 ton'
 #st.write(range(ritdata["VoertuigNr"].nunique()))
-with col1:
+with col5:
     for x in range(ritdata["VoertuigNr"].nunique()):
         ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
         exec(f'verbruikvoertuig_{x} = 0') 
@@ -67,7 +67,7 @@ with col1:
                 else:
                     st.write(":green[Met deze combinatie van specificaties kunt u uw ritten **wel** uitvoeren]")
                 
-with col2:
+with col6:
     for x in range(ritdata["VoertuigNr"].nunique()):
         ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
         #exec(f'verbruikvoertuig_{x} = 0') 
