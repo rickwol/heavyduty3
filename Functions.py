@@ -1,5 +1,5 @@
 
-def RitDataMeerdere(ritdata, voertuig):
+def RitDataMeerdere(ritdata, marge):
     
     import pandas as pd
     import numpy as np
@@ -13,6 +13,17 @@ def RitDataMeerdere(ritdata, voertuig):
     #Indien difftime te klein - kan laden wordt Nee
     ritdata["Kan laden op einde rit"] = np.where((ritdata["difftime"]<0.5), "Nee", ritdata["Kan laden op einde rit"])
     ritdata["Kan laden op einde rit"] = np.where((ritdata["VoertuigNr"].shift(-1) != ritdata["VoertuigNr"]), "Ja", ritdata["Kan laden op einde rit"])
+    
+    ####Bepalen verbruik
+    
+#      if voertuig == 'Medium bakwagen lvm 12 - 18 ton':
+#         tempverbruikvoertuig = 1.2
+#     elif voertuig =='Grote bakwagen lvm > 18 ton': 
+#         tempverbruikvoertuig = 1.1
+#     elif voertuig =='Lichte trekker z/opl gvm < 40 ton':
+#         tempverbruikvoertuig = 1
+#     else:
+#         tempverbruikvoertuig = 0.8
 
     ###initalisatie kolom
     ritdata["KMber"] = 0
@@ -40,7 +51,10 @@ def RitDataMeerdere(ritdata, voertuig):
     maxi = len(ritdata["Starttime"]) - 1
     mini = ritdata["Endtime"].max() + datetime.timedelta(hours=8)
 
-    ritdata["Verbruik"] = 1.2 ###1.2 voertuig verbruik
+    ritdata["Verbruik"] = np.where(ritdata["Type voertuig"]== 'Medium bakwagen lvm 12 - 18 ton', 1.2, 0.8)
+    ritdata["Verbruik"] = np.where(ritdata["Type voertuig"]== 'Grote bakwagen lvm > 18 ton', 1.1,ritdata["Verbruik"])
+    ritdata["Verbruik"] = np.where(ritdata["Type voertuig"]== 'Lichte trekker z/opl gvm < 40 ton', 1,ritdata["Verbruik"])
+    
 
     ritdata["difftime"] = ((ritdata["Starttime"].shift(-1) - ritdata["Endtime"]).dt.total_seconds()/3600)-0.16
     ritdata["difftime"] = np.where(ritdata["difftime"] < -0.16, ((mini - ritdata["Endtime"]).dt.total_seconds()/3600)-0.16 ,ritdata["difftime"] )
@@ -48,7 +62,7 @@ def RitDataMeerdere(ritdata, voertuig):
     ###klopt deze?
     ritdata["Aantalritten"] = (ritdata.
               groupby(['VoertuigNr'])["Rit Nr"].transform('max'))
-    ritdata["laadsnelheid"] =  (ritdata["KMber"] * 0.8 * ritdata["Verbruik"]/  ritdata["difftime"]) 
+    ritdata["laadsnelheid"] =  (ritdata["KMber"] * (1-(marge/100)) * ritdata["Verbruik"]/  ritdata["difftime"]) 
     ritdata["laadsnelheid"] = np.where((ritdata["Aantalritten"] == ritdata["Rit Nr"]), (ritdata["KMber"] * ritdata["Verbruik"]/  ritdata["difftime"]) , ritdata["laadsnelheid"])
     ritdata["laadsnelheid"] = np.where((ritdata["Kan laden op einde rit"] == "Nee"), 0, ritdata["laadsnelheid"])
     ritdata
@@ -75,7 +89,7 @@ def RitDataMeerdere(ritdata, voertuig):
 
     ritdata["Energieopladen"] = np.where(ritdata["laadsnelheid"] > 0, ritdata["difftime"] * ritdata["laadsnelheid"], 0)
     ritdata["Accu"] = ritdata.groupby(["VoertuigNr"])["KMber"].transform('max')
-    ritdata["Accu"] = np.where(ritdata["Rit Nr"] == 1, (ritdata["Accu"]/0.7) * voertuig, 0)
+    ritdata["Accu"] = np.where(ritdata["Rit Nr"] == 1, (ritdata["Accu"]/(1-(marge/100))) * ritdata["Verbruik"], 0)
     
     ###Update profiel laatste rit
     mini = ritdata["Endtime"].max() + datetime.timedelta(hours= ritdata["Energieopladen"][maxi]/ritdata["laadsnelheid"].max())
@@ -95,7 +109,7 @@ def RitDataMeerdere(ritdata, voertuig):
         else:
             ritdata["Accu"][x] = ritdata["Accu"][x-1] + ritdata["EnergieVerbruik"][x] + ritdata["Energieopladen"][x]
 
-    ritdata["Accu"] = np.where(ritdata["Accu"] >ritdata.KMber.max()/0.7*voertuig, ritdata.KMber.max()/0.7*voertuig, ritdata["Accu"])
+    ritdata["Accu"] = np.where(ritdata["Accu"] >ritdata.KMber.max()/(1-(marge/100))*ritdata["Verbruik"], (1-(marge/100))*ritdata["Verbruik"], ritdata["Accu"])
 
     profielsum = pd.DataFrame(profiel.groupby(["Tijdlijst"]).laadsnelheid.sum()).reset_index()
     
