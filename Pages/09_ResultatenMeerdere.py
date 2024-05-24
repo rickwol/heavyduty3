@@ -8,20 +8,6 @@ from Functions import *
 
 st.set_page_config(page_title="Ritprofielen", page_icon="📈", initial_sidebar_state="collapsed")
 
-st.markdown(
-    """
-<style>
-    [data-testid="collapsedControl"] {
-        display: none
-    }
-    .reportview-container .main .block-container{{f"max-width: 1000px;"
-    }}
-
-</style>
-""",
-    unsafe_allow_html=True,
-)
-
 #st.sidebar.header("Ritprofielen")
 
 st.title("Heavy Duty Elektrificatie tool")
@@ -35,8 +21,13 @@ st.title("Heavy Duty Elektrificatie tool")
 #             ritdata = st.session_state["df_value"]
 
 ritdata = st.session_state["df_value"]
-verbruik=1.2
-ritdata, profiel, profielsum = RitDataMeerdere(ritdata, verbruik)
+
+radio_markdown = '''
+Er wordt een marge aangehouden om onvoorziene situaties mee te kunnen nemen (Standaard 10%) en om de veroudering van de batterij over de tijd mee te nemen (10%). Veel kleinere marges worden niet geadviseerd.
+'''.strip()
+marge = st.number_input("Hoeveel marge wilt u aanhouden voor u batterij capaciteit in procenten? De standaard waarde is 20%", value = 20, help=radio_markdown)
+
+ritdata, profiel, profielsum = RitDataMeerdere(ritdata, marge)
 
 profielsum.laadsnelheid.max()
 
@@ -69,7 +60,10 @@ with col1:
     st.header("Alleen depot laden")
     st.image("https://media.istockphoto.com/id/1306857153/nl/foto/het-laadstation-van-elektrische-voertuigen-op-een-achtergrond-van-een-vrachtwagen.jpg?s=612x612&w=0&k=20&c=kF5jroBqGmPsn_6zup2ahw1R2W6xNb6dNibQqlf-KGM=")
     for x in range(ritdata["VoertuigNr"].nunique()):
-        ritdata2 = ritdata[ritdata["VoertuigNr"]==x+1]
+        ritdata2 = ritdata[ritdata["VoertuigNr"]==x+1].reset_index(drop=True)
+        ###Verbruik vaststellen
+        verbruik = ritdata2["Verbruik"][0]
+
         rit1 =  ritdata2["KM"].head(1)
         if ritdata2["KM"].shape[0]>1:
             andereritten = ritdata2["KM"].tail(-1).max()#/0.8
@@ -77,9 +71,9 @@ with col1:
             andereritten = rit1
         kilometers = float(np.maximum(rit1, andereritten)) ###Maximum van alle ritten
         kilomterssom = ritdata2["KM"].sum() ###Totaalkilometers
-        energieonderweg = int(kilometers/0.7 * verbruik)
-        energiedepot = int(kilomterssom/0.7 * verbruik)
-        oplaaddepot = int(energiedepot/12)
+        energieonderweg = int(kilometers/(1-(marge/100)) * verbruik)
+        energiedepot = int(kilomterssom/(1-(marge/100)) * verbruik)
+        oplaaddepot = int(energiedepot/8)
         tekst = "Voor voertuig " + str(x+1)
         st.subheader(tekst)
         st.write("Accu:", str(np.round(energiedepot)), "kWh")
@@ -91,7 +85,10 @@ with col2:
     st.header("Frequent laden")
     st.image("https://media.istockphoto.com/id/1306857153/nl/foto/het-laadstation-van-elektrische-voertuigen-op-een-achtergrond-van-een-vrachtwagen.jpg?s=612x612&w=0&k=20&c=kF5jroBqGmPsn_6zup2ahw1R2W6xNb6dNibQqlf-KGM=")
     for x in range(ritdata["VoertuigNr"].nunique()):
-        ritdata2 = ritdata[ritdata["VoertuigNr"]==x+1]
+        ritdata2 = ritdata[ritdata["VoertuigNr"]==x+1].reset_index(drop=True)
+        ###Verbruik vaststellen
+        verbruik = ritdata2["Verbruik"][0]
+        
         rit1 =  ritdata2["KM"].head(1)
         if ritdata2["KM"].shape[0]>1:
             andereritten = ritdata2["KM"].tail(-1).max()#/0.8
@@ -99,8 +96,8 @@ with col2:
             andereritten = rit1
         kilometers = ritdata2.KMber.max() ###Maximum van alle ritten
         kilomterssom = ritdata["KM"].sum() ###Totaalkilometers
-        energieonderweg = int(kilometers/0.7 * verbruik)
-        energiedepot = int(kilomterssom/0.7 * verbruik)
+        energieonderweg = int(kilometers/(1-(marge/100)) * verbruik)
+        energiedepot = int(kilomterssom/(1-(marge/100)) * verbruik)
         oplaaddepot = int(np.round(ritdata2["laadsnelheid"].tail(1)))
         tekst = "Voor voertuig " + str(x+1)
         st.subheader(tekst)

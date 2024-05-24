@@ -8,20 +8,6 @@ from Functions import *
 
 st.set_page_config(page_title="Ritprofielen", page_icon="📈", initial_sidebar_state="collapsed")
 
-st.markdown(
-    """
-<style>
-    [data-testid="collapsedControl"] {
-        display: none
-    }
-    .reportview-container .main .block-container{{f"max-width: 1000px;"
-    }}
-
-</style>
-""",
-    unsafe_allow_html=True,
-)
-
 #st.sidebar.header("Ritprofielen")
 
 st.title("Heavy Duty Elektrificatie tool")
@@ -76,12 +62,11 @@ with col1:
                 ritdata4 = ritdata3[ritdata3["VoertuigNr"] == x+1].reset_index(drop=True)
                 if ritdata4["Accu"].min() < 0:
                     st.write(":red[Met deze combinatie van specificaties kunt u uw ritten **niet** uitvoeren]")
+                elif ritdata4["Accu"].min() < 25:
+                    st.write(":orange[Met deze combinatie van specificaties kunt u uw ritten uitvoeren maar heeft u minder veiligheidsmarge dan gewenst]")             
                 else:
                     st.write(":green[Met deze combinatie van specificaties kunt u uw ritten **wel** uitvoeren]")
-               
-
-
-
+                
 with col2:
     for x in range(ritdata["VoertuigNr"].nunique()):
         ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
@@ -116,6 +101,8 @@ with col2:
                 ritdata4 = ritdata3[ritdata3["VoertuigNr"] == x+1].reset_index(drop=True)
                 if ritdata4["Accu"].min() < 0:
                     st.write(":red[Met deze combinatie van specificaties kunt u uw ritten **niet** uitvoeren]")
+                elif ritdata4["Accu"].min() < 25:
+                    st.write(":orange[Met deze combinatie van specificaties kunt u uw ritten uitvoeren maar heeft u minder veiligheidsmarge dan gewenst]")       
                 else:
                     st.write(":green[Met deze combinatie van specificaties kunt u uw ritten **wel** uitvoeren]")
                 #st.dataframe(ritdata[ritdata["VoertuigNr"] == x+1].loc["Accu"])
