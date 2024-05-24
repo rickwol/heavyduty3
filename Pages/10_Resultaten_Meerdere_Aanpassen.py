@@ -113,6 +113,8 @@ ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata)
 st.session_state.ritdata3 = ritdata3
 st.session_state.profielsum = profielsum
 
+if st.button("Herbereken"):
+    st.rerun()
 
 col3, col4 = st.columns(2)
 with col3:
