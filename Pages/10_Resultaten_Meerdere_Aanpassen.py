@@ -20,15 +20,16 @@ if st.session_state.laadkeuze != 'Frequent laden':
     ritdata = st.session_state["df_value"]
     ritdata["Kan laden op einde rit"] = "Nee"
     ritdata["Kan laden op einde rit"] = np.where((ritdata["VoertuigNr"].shift(-1) != ritdata["VoertuigNr"]), "Ja", ritdata["Kan laden op einde rit"])
-    verbruik=1.2
+    verbruik= st.session_state.marge
     ritdata, profiel, profielsum = RitDataMeerdere(ritdata, verbruik)
+  
     
 #st.dataframe(ritdata)
-col5, col6 = st.columns(2)
+col1, col2 = st.columns(2)
 
 voertuig ='Grote bakwagen lvm > 18 ton'
 #st.write(range(ritdata["VoertuigNr"].nunique()))
-with col5:
+with col1:
     for x in range(ritdata["VoertuigNr"].nunique()):
         ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
         exec(f'verbruikvoertuig_{x} = 0') 
@@ -67,7 +68,7 @@ with col5:
                 else:
                     st.write(":green[Met deze combinatie van specificaties kunt u uw ritten **wel** uitvoeren]")
                 
-with col6:
+with col2:
     for x in range(ritdata["VoertuigNr"].nunique()):
         ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
         #exec(f'verbruikvoertuig_{x} = 0') 
@@ -114,14 +115,13 @@ st.session_state.ritdata3 = ritdata3
 st.session_state.profielsum = profielsum
 
 
-
 col3, col4 = st.columns(2)
 with col3:
     if st.button("Vorige"):
-        switch_page("meerdere_voertuig_keuze")
+        switch_page("ritprofiel_gemiddeld")
     
 with col4:
     if st.button("Volgende"):
         switch_page("laadprofiel")  
         
-#st.rerun()
+st.rerun()

@@ -43,9 +43,7 @@ Maak uw keuze uit twee laadstrategieën
 
 
 ###Keuze voertuig
-truckinput = st.radio(
-    'Kies hier uw laadstrategie',
-    ('Depot laden                 ', 'Frequent laden'),horizontal = True, help=radio_markdown)
+
 
 
 st.text("Gebruik deze input voor een verkenning van welke specifieke truck dit kan zijn in de ZETI tool:")
@@ -101,15 +99,21 @@ with col2:
         oplaaddepot = int(np.round(ritdata2["laadsnelheid"].tail(1)))
         tekst = "Voor voertuig " + str(x+1)
         st.subheader(tekst)
-        st.write("Accu:", str(np.round(energieonderweg)), "kWh")
-        st.write("Range:", str(np.round(kilometers)),"km")
+        st.write("Accu:", str(np.round(ritdata2["Accu"].max())), "kWh")
+        st.write("Range:", str(np.round(ritdata2["Accu"].max()/ritdata2["Verbruik"].max())),"km")
         st.write("Oplaadcapaciteit: ", str(int(np.round(ritdata2["laadsnelheid"].max()))), "kW")
 
-with col1:
+truckinput = st.radio(
+    'Kies hier uw laadstrategie',
+    ('Depot laden                 ', 'Frequent laden'),horizontal = True, help=radio_markdown)
+
+col3, col4, = st.columns(2)
+
+with col3:
     if st.button("Vorige"):
         switch_page("ritprofiel_gemiddeld")
     
-with col2:
+with col4:
     if st.button("Volgende"):
         switch_page("opties")  
     
@@ -128,9 +132,9 @@ else:
             andereritten = rit1
         kilometers = float(np.maximum(rit1, andereritten)) ###Maximum van alle ritten
         kilomterssom = ritdata2["KM"].sum() ###Totaalkilometers
-        energieonderweg = int(kilometers/0.7 * verbruik)
-        energiedepot = int(kilomterssom/0.7 * verbruik)
-        oplaaddepot = int(energiedepot/12)
+        energieonderweg = int(kilometers/(1-(marge/100)) * verbruik)
+        energiedepot = int(kilomterssom/(1-(marge/100)) * verbruik)
+        oplaaddepot = int(energiedepot/8)
         oplaaddepotsum = oplaaddepotsum + oplaaddepot
         
     profielsum  = pd.DataFrame.from_dict({"Tijdlijst" : [0]})
@@ -143,7 +147,7 @@ else:
     
 
 
-    
+st.session_state.marge= marge    
 st.session_state.ritdata2 = ritdata
 st.session_state.profielsum = profielsum
 st.session_state.laadkeuze = truckinput
