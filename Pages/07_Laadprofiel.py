@@ -7,20 +7,6 @@ from streamlit_extras.switch_page_button import switch_page
 
 st.set_page_config(page_title="Laadprofiel", page_icon="📈", initial_sidebar_state="collapsed")
 
-st.markdown(
-    """
-<style>
-    [data-testid="collapsedControl"] {
-        display: none
-    }
-    .reportview-container .main .block-container{{f"max-width: 1000px;"
-    }}
-
-</style>
-""",
-    unsafe_allow_html=True,
-)
-
 #st.sidebar.header("Ritprofielen")
 
 st.title("Heavy Duty Elektrificatie tool")
