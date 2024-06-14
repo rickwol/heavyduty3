@@ -55,7 +55,7 @@ st.markdown(
 )
 
 #st.page_link("pages/02_InAppInput.py", label = "Input")
-st.link_button("Start", "https://gtdetooling.streamlit.app/Input")
+st.link_button("Start", "https://heavyduty3-production.up.railway.app/Input")
 #if st.button("Start"):
- #   st.page_link("https://gtdetooling.streamlit.app/Input", label="Start")
+ #   st.page_link("https://heavyduty3-production.up.railway.app/Input", label="Start")
     
