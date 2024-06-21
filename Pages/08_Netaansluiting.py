@@ -6,24 +6,12 @@ import datetime, timedelta
 import requests
 from datetime import date
 
-st.markdown(
-    """
-<style>
-    [data-testid="collapsedControl"] {
-        display: none
-    }
-    .reportview-container .main .block-container{{f"max-width: 1000px;"
-    }}
 
-</style>
-""",
-    unsafe_allow_html=True,
-)
-
-download = requests.get("https://capaciteitskaart.netbeheernederland.nl/dashboard/download")
-today = date.today()
-d1 = today.strftime("%Y%m%d")
-csvname = "export_"+ d1 +".csv"
+download = requests.get("https://data.partnersinenergie.nl/capaciteitskaart/data/congestie_pc6.csv")
+#today = date.today()
+#d1 = today.strftime("%Y%m%d")
+#csvname = "export_"+ d1 +".csv"
+csvname = "congestie_pc6.csv"
 if download.status_code == 200:
     # Save the content of the response to a local CSV file
     with open(csvname, "wb") as f:
@@ -60,8 +48,10 @@ else:
         st.write("Momenteel is er op uw locatie", Postcode, "geen sprake van netcongestie. Er is ook voor de komende termijn voldoende capaciteit beschikbaar")
      if Congestie.iloc[0, 2] == 1:
          st.write("Momenteel is er op uw locatie", Postcode, "geen sprake van netcongestie. Maar aansluitingen zien wel beperkt. Neem contact op met uw netbeheerder voor details")
-     if Congestie.iloc[0, 2] == 2 or Congestie.iloc[0, 2] == 3:
-         st.write("Momenteel is er op uw locatie", Postcode, "sprake van netcongestie. Naar verwachting kunt u deze netaansluting pas in 2026 verkrijgen")
+     if Congestie.iloc[0, 2] == 2:
+         st.write("Momenteel is er op uw locatie", Postcode, "sprake van netcongestie. Er wordt specifiek onderzoek gedaan naar de mogelijkheden")
+     if Congestie.iloc[0, 2] == 3 or Congestie.iloc[0, 2] == 3:
+         st.write("Momenteel is er op uw locatie", Postcode, "sprake van netcongestie. U wordt in de wachtrij geplaatst. Neem contact met u netbeheerder voor meer informatie")
          st.write("Met mitigerende maatregelen kunt u uw benodigde netaansluiting terugbrengen tot: 3X80A. Hierdoor hoeft u niet lang te wachten op uitbreiding van uw aansluiting.") 
 
 
