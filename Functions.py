@@ -111,7 +111,7 @@ def RitDataMeerdere(ritdata, marge):
 
     ritdata["Accu"] = np.where(ritdata["Accu"] >ritdata.KMber.max()/(1-(marge/100))*ritdata["Verbruik"], (1-(marge/100))*ritdata["Verbruik"], ritdata["Accu"])
     
-    ritdata["laadsnelheid"] = np.where(ritdata["Rit Nr"] == ritdata["Aantalritten"], (ritdata['Accu'].max()-ritdata["Accu"] + ritdata["EnergieVerbruik"])/8, ritdata["laadsnelheid"]) 
+    ritdata["laadsnelheid"] = np.where(ritdata["Rit Nr"] == ritdata["Aantalritten"], ((ritdata['Accu'].max()-ritdata["Accu"].shift(1)) - ritdata["EnergieVerbruik"])/8, ritdata["laadsnelheid"]) 
     
     profiel = pd.DataFrame(ritdata.explode(["Tijdlijst"]).reset_index())
     profielsum = pd.DataFrame(profiel.groupby(["Tijdlijst"]).laadsnelheid.sum()).reset_index()
