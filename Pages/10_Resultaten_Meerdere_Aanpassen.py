@@ -15,6 +15,7 @@ st.title("Heavy Duty Elektrificatie tool")
 ritdata = st.session_state.ritdata2
 st.write("Op deze pagina kunt u de technische specificaties naar uw wens aanpassen. Per voertuig staan reeds de berekende ideale waardes ingevuld.") 
 
+marge = st.session_state.marge
 
 if st.session_state.laadkeuze != 'Frequent laden':
     ritdata = st.session_state["df_value"]
@@ -23,8 +24,9 @@ if st.session_state.laadkeuze != 'Frequent laden':
     verbruik= st.session_state.marge
     ritdata, profiel, profielsum = RitDataMeerdere(ritdata, verbruik)
   
-    
-#st.dataframe(ritdata)
+
+# st.dataframe(ritdata)
+
 col1, col2 = st.columns(2)
 
 voertuig ='Grote bakwagen lvm > 18 ton'
@@ -32,6 +34,7 @@ voertuig ='Grote bakwagen lvm > 18 ton'
 with col1:
     for x in range(ritdata["VoertuigNr"].nunique()):
         ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
+        margemax = ritdata2["Accu"].max()*(marge/100)
         exec(f'verbruikvoertuig_{x} = 0') 
         #print(ritdata2["VoertuigNr"].min())
         if ritdata2["VoertuigNr"].min() % 2 != 0:
@@ -61,16 +64,21 @@ with col1:
                 exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "laadsnelheid"] = laadvoertuig_{x}')
                 ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata)
                 ritdata4 = ritdata3[ritdata3["VoertuigNr"] == x+1].reset_index(drop=True)
-                if ritdata4["Accu"].min() < 0:
+                margemax = ritdata4.KMber.max()*ritdata4["Verbruik"].max()*(marge/100)
+                if (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min() < 0:
                     st.write(":red[Met deze combinatie van specificaties kunt u uw ritten **niet** uitvoeren]")
-                elif ritdata4["Accu"].min() < 25:
+                elif (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min() < margemax:
                     st.write(":orange[Met deze combinatie van specificaties kunt u uw ritten uitvoeren maar heeft u minder veiligheidsmarge dan gewenst]")             
                 else:
                     st.write(":green[Met deze combinatie van specificaties kunt u uw ritten **wel** uitvoeren]")
+                #st.dataframe(ritdata4)
+                #st.write(margemax)
+                #st.write( (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min())
                 
 with col2:
     for x in range(ritdata["VoertuigNr"].nunique()):
         ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
+        margemax = (ritdata2["Accu"]+ritdata2["EnergieVerbruik"]).min()
         #exec(f'verbruikvoertuig_{x} = 0') 
         #print(ritdata2["VoertuigNr"].min())
         if ritdata2["VoertuigNr"].min() % 2 == 0:
@@ -100,10 +108,10 @@ with col2:
                 exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "laadsnelheid"] = laadvoertuig_{x}')
                 ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata)
                 ritdata4 = ritdata3[ritdata3["VoertuigNr"] == x+1].reset_index(drop=True)
-                if ritdata4["Accu"].min() < 0:
+                if (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min() < 0:
                     st.write(":red[Met deze combinatie van specificaties kunt u uw ritten **niet** uitvoeren]")
-                elif ritdata4["Accu"].min() < 25:
-                    st.write(":orange[Met deze combinatie van specificaties kunt u uw ritten uitvoeren maar heeft u minder veiligheidsmarge dan gewenst]")       
+                elif (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min() < margemax:
+                    st.write(":orange[Met deze combinatie van specificaties kunt u uw ritten uitvoeren maar heeft u minder veiligheidsmarge dan gewenst]")             
                 else:
                     st.write(":green[Met deze combinatie van specificaties kunt u uw ritten **wel** uitvoeren]")
                 #st.dataframe(ritdata[ritdata["VoertuigNr"] == x+1].loc["Accu"])

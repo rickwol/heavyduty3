@@ -53,7 +53,6 @@ st.write("Klik [hier](%s) voor de tool" % url)
 col1, col2, = st.columns(2)
 
 
-
 with col1:
     st.header("Alleen depot laden")
     st.image("https://media.istockphoto.com/id/1306857153/nl/foto/het-laadstation-van-elektrische-voertuigen-op-een-achtergrond-van-een-vrachtwagen.jpg?s=612x612&w=0&k=20&c=kF5jroBqGmPsn_6zup2ahw1R2W6xNb6dNibQqlf-KGM=")
@@ -71,11 +70,11 @@ with col1:
         kilomterssom = ritdata2["KM"].sum() ###Totaalkilometers
         energieonderweg = int(kilometers/(1-(marge/100)) * verbruik)
         energiedepot = int(kilomterssom/(1-(marge/100)) * verbruik)
-        oplaaddepot = int(energiedepot/8)
+        oplaaddepot = int((kilomterssom*verbruik)/8)
         tekst = "Voor voertuig " + str(x+1)
         st.subheader(tekst)
         st.write("Accu:", str(np.round(energiedepot)), "kWh")
-        st.write("Range:", str(np.round(kilomterssom)), "km")
+        st.write("Range:", str(np.round(energiedepot/ritdata2["Verbruik"].max())), "km")
         st.write("Oplaadcapaciteit: ", str(oplaaddepot), "kW")
         
 
