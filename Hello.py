@@ -20,7 +20,7 @@ show_pages(
         Page("Pages/10_Resultaten_Meerdere_Aanpassen.py", "Opties"), 
         Page("Pages/07_Laadprofiel.py", "Laadprofiel"),
         Page("Pages/08_Netaansluiting.py", "Netaansluiting"),
-        #Page("Pages/06_Financieel.py", "Financieel overzicht"),
+        Page("Pages/11_Overview.py", "Overzicht"),
 
        
     ]
@@ -55,7 +55,7 @@ st.markdown(
 )
 
 #st.page_link("pages/02_InAppInput.py", label = "Input")
-st.link_button("Start", "https://heavyduty3-production.up.railway.app/Input")
-#if st.button("Start"):
- #   st.page_link("https://heavyduty3-production.up.railway.app/Input", label="Start")
+
+if st.button("Start"):
+    switch_page("input")
     
