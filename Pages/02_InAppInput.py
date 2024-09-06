@@ -54,27 +54,30 @@ st.write("Wilt u deze inzien en aanpassen, dan kan dit hieronder")
 with st.expander("Zie specificaties"):
     st.write(voertuig)
     if voertuig == 'Medium bakwagen lvm 12 - 18 ton':
-        tempverbruikvoertuig = 1.2
-    elif voertuig =='Grote bakwagen lvm > 18 ton': 
-        tempverbruikvoertuig = 1.1
-    elif voertuig =='Lichte trekker z/opl gvm < 40 ton':
-        tempverbruikvoertuig = 1
-    else:
         tempverbruikvoertuig = 0.8
+    elif voertuig =='Grote bakwagen lvm > 18 ton': 
+        tempverbruikvoertuig = 1
+    elif voertuig =='Lichte trekker z/opl gvm < 40 ton':
+        tempverbruikvoertuig = 1.1
+    else:
+        tempverbruikvoertuig = 1.2
     
     
     verbruikvoertuig = st.number_input('Energieverbruik voertuig kWh/km', value= tempverbruikvoertuig)
     st.write(optiesvoertuig)
     if optiesvoertuig == "Koeling":
-        verbruikopties  = st.number_input('Energieverbruik opties kWh/uur', value=0.8)
+        verbruikopties  = st.number_input('Energieverbruik koeling kWh/uur', value=6)
     elif optiesvoertuig == "Geen":
-        verbruikopties  = st.number_input('Energieverbruik opties kWh/uur', value=0)       
+        st.text("Geen additioneel verbruik")    
+        verbruikopties = 0
     else: 
-        verbruikopties = st.number_input('Energieverbruik opties kWh/keer', value=0.05)
+        verbruikopties = st.number_input('Energieverbruik opties kWh/lift', value=0.5)
+        Aantallifts = st.number_input('Aantal lifts per uur', value=10)
+        
 
 ###Store inputs in session state
 if "voertuig" not in st.session_state:
-    st.session_state.voertuig = verbruikvoertuig
+    st.session_state.voertuig = 1/verbruikvoertuig
     st.rerun()
 if "opties" not in st.session_state:
     st.session_state.opties = verbruikopties
@@ -83,14 +86,33 @@ if "typevoertuig" not in st.session_state:
     st.session_state.typevoertuig = voertuig
     st.rerun()
     
-Aantalritten =  st.number_input('Hoeveel ritten op 1 dag?', step = 1, min_value= 5) -3
+#Aantalritten =  st.number_input('Hoeveel ritten op 1 dag?', step = 1, min_value= 5) -3
+radio_markdown = '''
+Er wordt een marge aangehouden om onvoorziene situaties mee te kunnen nemen (Standaard 10%) en om de veroudering van de batterij over de tijd mee te nemen (10%). Kleinere marges worden niet geadviseerd.
+'''.strip()
+
+###Store arge in session state
+if "marge" not in st.session_state:
+    st.session_state.marge = 20
+    st.rerun()
+
+
+marge2 = st.number_input("Hoeveel marge wilt u aanhouden voor u batterij capaciteit in procenten? De standaard waarde is 20%. Klik op het vraagteken voor meer informatie over de marge", value = st.session_state.marge, help=radio_markdown)
+
+###Update session state op basis van input
+if marge2 != st.session_state.marge:
+    st.session_state.marge = marge2
+    
+    
 
 ###Standaard Dataframe
 df = pd.DataFrame(
     [
            {"Nummer rit": 1,"Starttijd Rit": "8:00", 'Eindtijd Rit' : "9:45", "Aantal kilometers": 10, "Kan laden op einde rit" : True, "Locatie einde rit: (Depot of Anders)" : "Depot"},
         {"Nummer rit": 2,"Starttijd Rit": "10:00", 'Eindtijd Rit' : "10:45", "Aantal kilometers": 75, "Kan laden op einde rit" : False, "Locatie einde rit: (Depot of Anders)" : "Depot"},
-        {"Nummer rit": 3,"Starttijd Rit": "12:00", 'Eindtijd Rit' : "13:45", "Aantal kilometers": 175, "Kan laden op einde rit" : True, "Locatie einde rit: (Depot of Anders)" : "Depot"}
+        {"Nummer rit": 3,"Starttijd Rit": "12:00", 'Eindtijd Rit' : "13:45", "Aantal kilometers": 175, "Kan laden op einde rit" : True, "Locatie einde rit: (Depot of Anders)" : "Depot"},
+         {"Nummer rit": 4,"Starttijd Rit": "15:00", 'Eindtijd Rit' : "16:00", "Aantal kilometers": 35, "Kan laden op einde rit" : True, "Locatie einde rit: (Depot of Anders)" : "Depot"},
+        {"Nummer rit": 5,"Starttijd Rit": "16:10", 'Eindtijd Rit' : "17:00", "Aantal kilometers": 40, "Kan laden op einde rit" : True, "Locatie einde rit: (Depot of Anders)" : "Depot"},
      
       
    ]
@@ -98,9 +120,9 @@ df = pd.DataFrame(
 
 
 ###Bepaal aantal ritten
-if(Aantalritten > 0):
-    for z in range(Aantalritten):
-        df = df.append({"Nummer rit": z+4,"Starttijd Rit": "8:00", 'Eindtijd Rit' : "9:45", "Aantal kilometers": 10, "Kan laden op einde rit" : True, "Locatie einde rit: (Depot of Anders)" : "Depot"}, ignore_index=True)
+#if(Aantalritten > 0):
+ #   for z in range(Aantalritten):
+  #      df = df.append({"Nummer rit": z+4,"Starttijd Rit": "8:00", 'Eindtijd Rit' : "9:45", "Aantal kilometers": 10, "Kan laden op einde #rit" : True, "Locatie einde rit: (Depot of Anders)" : "Depot"}, ignore_index=True)
 
 ###Store dataframe in session state
 if "df_value" not in st.session_state:

@@ -8,16 +8,15 @@ from streamlit_extras.switch_page_button import switch_page
 
 st.set_page_config(page_title="Ritprofielen meerdere voertuigen", page_icon="📈", initial_sidebar_state="collapsed")
 
-
 #st.sidebar.header("Ritprofielen")
 
 st.title("Heavy Duty Elektrificatie tool")
 
-st.write("Download de excel file om de ritprofielen voor meerdere voertuigen in te vullen. Dit formulier gebruikt dezelfde input als de CBS enquête. In het huidige formulier staat reeds een voorbeeld ingevuld")
+st.write("Download de excel file om de ritprofielen voor meerdere voertuigen in te vullen. In het huidige formulier staat reeds een voorbeeld ingevuld. Voor een verdere instructie zie de losse handleiding of instructies in het tweede tabblad")
 with open("Pages/Invulformulier.xlsx", "rb") as file:
     st.download_button(label = "Download", data=file, file_name="Invulformulier.xlsx")
 
-st.write("Indien je het formulier hebt ingevuld kun je hier")
+st.write("Indien je het formulier hebt ingevuld kun je hier uploaden")
 
 DataFrame = st.file_uploader(label = "Upload")
 if DataFrame is not None:

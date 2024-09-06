@@ -23,9 +23,9 @@ st.title("Heavy Duty Elektrificatie tool")
 ritdata = st.session_state["df_value"]
 
 radio_markdown = '''
-Er wordt een marge aangehouden om onvoorziene situaties mee te kunnen nemen (Standaard 10%) en om de veroudering van de batterij over de tijd mee te nemen (10%). Veel kleinere marges worden niet geadviseerd.
+Er wordt een marge aangehouden om onvoorziene situaties mee te kunnen nemen (Standaard 10%) en om de veroudering van de batterij over de tijd mee te nemen (10%). Kleinere marges worden niet geadviseerd.
 '''.strip()
-marge = st.number_input("Hoeveel marge wilt u aanhouden voor u batterij capaciteit in procenten? De standaard waarde is 20%", value = 20, help=radio_markdown)
+marge = st.number_input("Hoeveel marge wilt u aanhouden voor u batterij capaciteit in procenten? De standaard waarde is 20%. Klik op het vraagteken voor meer informatie over de marge" , value = 20, help=radio_markdown)
 
 ritdata, profiel, profielsum = RitDataMeerdere(ritdata, marge)
 
