@@ -55,5 +55,11 @@ else:
          st.write("Met mitigerende maatregelen kunt u uw benodigde netaansluiting terugbrengen tot: 3X80A. Hierdoor hoeft u niet lang te wachten op uitbreiding van uw aansluiting.") 
 
 
-         
+col3, col4 = st.columns(2)
+with col3:
+    if st.button("Vorige"):
+        switch_page("voertuig keuze")
+with col4:
+    if st.button("Volgende"):
+        switch_page("overview")
 
