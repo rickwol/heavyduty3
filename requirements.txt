@@ -7,3 +7,4 @@ timedelta == 2020.12.3
 st_pages == 0.4.1
 streamlit_extras == 0.2.7
 openpyxl == 3.0.10
+fpdf == 1.7.2
