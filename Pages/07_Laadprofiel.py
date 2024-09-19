@@ -41,3 +41,33 @@ with col4:
 
 if "maxvermogen" not in st.session_state:
     st.session_state.maxvermogen = df2["Load(kW)"].max()
+
+    ###design footer
+footer="""<style>
+a:link , a:visited{
+color: blue;
+background-color: transparent;
+text-decoration: underline;
+}
+
+a:hover,  a:active {
+color: red;
+background-color: transparent;
+text-decoration: underline;
+}
+
+.footer {
+position: fixed;
+left: 0;
+bottom: 0;
+width: 100%;
+background-color: white;
+color: black;
+text-align: center;
+}
+</style>
+<div class="footer">
+<img src="https://i.ibb.co/b6QF7F1/design.png">
+</div>
+"""
+st.markdown(footer,unsafe_allow_html=True)  
