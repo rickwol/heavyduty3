@@ -33,7 +33,7 @@ with col2:
     if st.button("Volgende"):
         switch_page("meerdere voertuig keuze")    
 
-if DataFrame2 is not None:      
+if DataFrame is not None:      
     edited_df2 = DataFrame2
     edited_df2["Starttijd"] = "1970-01-01 " + edited_df2["Starttijd"]
     edited_df2["Eindtijd"] = "1970-01-01 " + edited_df2["Eindtijd"]
@@ -45,7 +45,7 @@ if DataFrame2 is not None:
     fig.update_yaxes(visible=False)
     fig.update_traces(
     hovertemplate=None,
-   hoverinfo='skip'
+    hoverinfo='skip'
 )
     st.write("Een visuele weergave van uw rittenpatroon over de dag")
     st.plotly_chart(fig)        
