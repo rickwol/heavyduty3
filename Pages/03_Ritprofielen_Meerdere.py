@@ -33,6 +33,23 @@ with col2:
     if st.button("Volgende"):
         switch_page("meerdere voertuig keuze")    
 
+if DataFrame2 is not None:      
+    edited_df2 = DataFrame2
+    edited_df2["Starttijd"] = "1970-01-01 " + edited_df2["Starttijd"]
+    edited_df2["Eindtijd"] = "1970-01-01 " + edited_df2["Eindtijd"]
+    edited_df2 = edited_df2[["VoertuigNr", "Starttijd", "Eindtijd"]]
+    heightfig = edited_df2["VoertuigNr"].max()*150
+    edited_df2["VoertuigNr"]=edited_df2["VoertuigNr"].astype(str)
+    fig = px.timeline(edited_df2, x_start ="Starttijd", x_end ="Eindtijd", y= "VoertuigNr", color= "VoertuigNr", height=heightfig)
+    fig.update_xaxes(tickformat="%H:%M:%S")
+    fig.update_yaxes(visible=False)
+    fig.update_traces(
+    hovertemplate=None,
+   hoverinfo='skip'
+)
+    st.write("Een visuele weergave van uw rittenpatroon over de dag")
+    st.plotly_chart(fig)        
+        
 ###design footer
 footer="""<style>
 a:link , a:visited{

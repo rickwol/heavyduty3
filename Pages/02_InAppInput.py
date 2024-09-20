@@ -171,6 +171,10 @@ edited_df2["Eindtijd Rit"] = "1970-01-01 " + edited_df2["Eindtijd Rit"]
 edited_df2 = edited_df2[["Rit", "Starttijd Rit", "Eindtijd Rit"]]
 fig = px.timeline(edited_df2, x_start ="Starttijd Rit", x_end ="Eindtijd Rit", y= "Rit", height=200)
 fig.update_xaxes(tickformat="%H:%M:%S")
+fig.update_traces(
+   hovertemplate=None,
+   hoverinfo='skip'
+)
 st.write("Een visuele weergave van uw rittenpatroon over de dag")
 st.plotly_chart(fig)
     
