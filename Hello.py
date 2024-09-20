@@ -26,17 +26,18 @@ show_pages(
     ]
 )
 
-
-st.markdown(
-    """
-<style>
-    [data-testid="collapsedControl"] {
-        display: none
-    }
-</style>
-""",
-    unsafe_allow_html=True,
-)
+with open( "style.css" ) as css:
+    st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
+    st.markdown(
+        """
+    <style>
+        [data-testid="collapsedControl"] {
+            display: none
+        }
+    </style>
+    """,
+        unsafe_allow_html=True,
+    )
 
 
 
@@ -84,7 +85,7 @@ text-align: center;
 }
 </style>
 <div class="footer">
-<img src="https://i.ibb.co/b6QF7F1/design.png">
+<img src="https://i.ibb.co/sRP3VPm/design.png">
 </div>
 """
 st.markdown(footer,unsafe_allow_html=True)      
