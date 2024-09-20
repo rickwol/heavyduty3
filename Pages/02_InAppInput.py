@@ -4,6 +4,7 @@ import numpy as np
 import plotly.express as px 
 import datetime, timedelta
 from streamlit_extras.switch_page_button import switch_page
+import plotly.figure_factory as ff
 
 st.set_page_config(page_title="Inappinvoer", page_icon="📈", initial_sidebar_state="collapsed")
 
@@ -71,7 +72,7 @@ with st.expander("Zie specificaties"):
         st.text("Geen additioneel verbruik")    
         verbruikopties = 0
     else: 
-        verbruikopties = st.number_input('Energieverbruik opties kWh/lift', value=0.5)
+        verbruikopties = st.number_input('Energieverbruik opties kWh/lift', value=0.2)
         Aantallifts = st.number_input('Aantal lifts per uur', value=10)
         
 
@@ -162,6 +163,17 @@ if edited_df is not None and not edited_df.equals(st.session_state["df_value"]):
     st.session_state["df_value"] = edited_df
     st.rerun()
 
+  
+edited_df2 = edited_df
+edited_df2["Rit"] = ""
+edited_df2["Starttijd Rit"] = "1970-01-01 " + edited_df2["Starttijd Rit"]
+edited_df2["Eindtijd Rit"] = "1970-01-01 " + edited_df2["Eindtijd Rit"]
+edited_df2 = edited_df2[["Rit", "Starttijd Rit", "Eindtijd Rit"]]
+fig = px.timeline(edited_df2, x_start ="Starttijd Rit", x_end ="Eindtijd Rit", y= "Rit", height=200)
+fig.update_xaxes(tickformat="%H:%M:%S")
+st.write("Een visuele weergave van uw rittenpatroon over de dag")
+st.plotly_chart(fig)
+    
 col1, col2, = st.columns(2)
 
 with col1:
@@ -197,7 +209,7 @@ text-align: center;
 }
 </style>
 <div class="footer">
-<img src="https://i.ibb.co/b6QF7F1/design.png">
+<img src="https://i.ibb.co/sRP3VPm/design.png">
 </div>
 """
 st.markdown(footer,unsafe_allow_html=True)        

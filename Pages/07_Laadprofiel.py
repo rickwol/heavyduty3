@@ -27,6 +27,7 @@ date = "2023-01-01"
 df2["Tijdstip"] = pd.to_datetime(df2["Tijdlijst"])
 df2["Load(kW)"] = df2["laadsnelheid"]
 fig = px.line(df2, x="Tijdstip", y="Load(kW)", title= "Laadprofiel")
+fig.update_xaxes(tickformat="%H:%M:%S")
 
 
 st.plotly_chart(fig)
@@ -67,7 +68,7 @@ text-align: center;
 }
 </style>
 <div class="footer">
-<img src="https://i.ibb.co/b6QF7F1/design.png">
+<img src="https://i.ibb.co/sRP3VPm/design.png">
 </div>
 """
 st.markdown(footer,unsafe_allow_html=True)  

@@ -132,7 +132,7 @@ with col4:
     if st.button("Volgende"):
         switch_page("laadprofiel")  
         
-st.rerun()
+
 
 ###design footer
 footer="""<style>
@@ -159,7 +159,9 @@ text-align: center;
 }
 </style>
 <div class="footer">
-<img src="https://i.ibb.co/b6QF7F1/design.png">
+<img src="https://i.ibb.co/sRP3VPm/design.png">
 </div>
 """
 st.markdown(footer,unsafe_allow_html=True)  
+
+st.rerun()

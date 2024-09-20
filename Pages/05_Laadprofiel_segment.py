@@ -55,7 +55,7 @@ text-align: center;
 }
 </style>
 <div class="footer">
-<img src="https://i.ibb.co/b6QF7F1/design.png">
+<img src="https://i.ibb.co/sRP3VPm/design.png">
 </div>
 """
 st.markdown(footer,unsafe_allow_html=True)  

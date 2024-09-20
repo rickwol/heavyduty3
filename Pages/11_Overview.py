@@ -9,19 +9,34 @@ from Functions import *
 st.set_page_config(page_title="Overview", page_icon="📈", initial_sidebar_state="collapsed")
 
 #st.sidebar.header("Ritprofielen")
-
+ritdata = st.session_state.ritdata3
+st.dataframe(ritdata)
 st.title("Heavy Duty Elektrificatie tool")
 st.title("Overzicht")
 
-st.text_area("Input",
-                   "Aantal voertuigen: .."
-                   "Gemiddeld aantal kilometers per dag:")
+for x in range(ritdata["VoertuigNr"].nunique()):
+    tekst = "Voor voertuig " + str(x+1)
+    st.write(tekst)
+    ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
+    types = ritdata2["Type voertuig"][0] + '\n' + "Kilometers per dag: " + ritdata2["KM"].sum().astype("str")
+    st.text_area("Input",
+                   types)
+    ritten = "Aantal ritten: " + str(len(ritdata2["KM"])) +"\n" + "Maximale lengte rit: " + ritdata2["KM"].max().astype("str")
+    st.text_area("Ritgegeves",
+                   ritten)
+    edited_df2 = ritdata
+    edited_df2["Rit"] = "Rit"
+    edited_df2["Starttijd Rit"] = "1970-01-01 " + edited_df2["Starttijd Rit"]
+    edited_df2["Eindtijd Rit"] = "1970-01-01 " + edited_df2["Eindtijd Rit"]
+    edited_df2 = edited_df2[["Rit", "Starttijd Rit", "Eindtijd Rit"]]
+    fig = px.timeline(edited_df2, x_start ="Starttijd Rit", x_end ="Eindtijd Rit", y= "Rit", height=200)
+    fig.update_xaxes(tickformat="%H:%M:%S")
+    st.plotly_chart(fig)
+    st.text_area("Voertuigen & Laadinfrastructuur",
+                   "Omvang van accucapaciteit: .."
+                   "Laadsnelheden:")
 
-st.text_area("Voertuigen & Laadinfrastructuur",
-                   "Aantal voertuigen: .."
-                   "Gemiddeld aantal kilometers per dag:")
-
-st.text_area("Netaansluiting",
+    st.text_area("Netaansluiting",
                    "Het benodigde additionele vermogen is: .."
                    "Uw huidige netaansluiting is:"
                     "Dit is onvoldoende/voldoende")
@@ -70,7 +85,7 @@ text-align: center;
 }
 </style>
 <div class="footer">
-<img src="https://i.ibb.co/b6QF7F1/design.png">
+<img src="https://i.ibb.co/sRP3VPm/design.png">
 </div>
 """
 st.markdown(footer,unsafe_allow_html=True)  
