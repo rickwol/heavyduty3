@@ -16,7 +16,7 @@ if download.status_code == 200:
     # Save the content of the response to a local CSV file
     with open(csvname, "wb") as f:
         f.write(download.content)
-congestiedatabase = pd.read_csv(csvname, delimiter = ";")
+congestiedatabase = pd.read_csv(csvname, delimiter = ";", decimal="," )
 #congestiedatabase = pd.read_csv("data2/netcongestie.csv")
 #st.sidebar.header("Ritprofielen")
 
