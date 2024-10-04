@@ -71,6 +71,8 @@ with col1:
                     st.write(":orange[Met deze combinatie van specificaties kunt u uw ritten uitvoeren maar heeft u minder veiligheidsmarge dan gewenst]")             
                 else:
                     st.write(":green[Met deze combinatie van specificaties kunt u uw ritten **wel** uitvoeren]")
+                if st.button("Bereken", key="button"+str(x)):
+                    st.rerun()
                 #st.dataframe(ritdata4)
                 #st.write(margemax)
                 #st.write( (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min())
@@ -114,6 +116,8 @@ with col2:
                     st.write(":orange[Met deze combinatie van specificaties kunt u uw ritten uitvoeren maar heeft u minder veiligheidsmarge dan gewenst]")             
                 else:
                     st.write(":green[Met deze combinatie van specificaties kunt u uw ritten **wel** uitvoeren]")
+                if st.button("Bereken", key="button"+str(x)):
+                    st.rerun()
                 #st.dataframe(ritdata[ritdata["VoertuigNr"] == x+1].loc["Accu"])
                 
 #st.write(accuvoertuig_1)             
@@ -164,4 +168,4 @@ text-align: center;
 """
 st.markdown(footer,unsafe_allow_html=True)  
 
-st.rerun()
+

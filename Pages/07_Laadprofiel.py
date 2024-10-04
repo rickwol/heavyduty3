@@ -72,3 +72,18 @@ text-align: center;
 </div>
 """
 st.markdown(footer,unsafe_allow_html=True)  
+
+####Sidebar niet zichtbaar
+st.markdown(
+    """
+<style>
+    [data-testid="collapsedControl"] {
+        display: none
+    }
+    .reportview-container .main .block-container{{f"max-width: 1000px;"
+    }}
+
+</style>
+""",
+    unsafe_allow_html=True,
+)

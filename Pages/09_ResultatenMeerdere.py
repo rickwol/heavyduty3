@@ -28,8 +28,8 @@ Er wordt een marge aangehouden om onvoorziene situaties mee te kunnen nemen (Sta
 marge = st.number_input("Hoeveel marge wilt u aanhouden voor u batterij capaciteit in procenten? De standaard waarde is 20%. Klik op het vraagteken voor meer informatie over de marge" , value = 20, help=radio_markdown)
 
 ritdata, profiel, profielsum = RitDataMeerdere(ritdata, marge)
-
-profielsum.laadsnelheid.max()
+#st.dataframe(profielsum)
+#profielsum.laadsnelheid.max()
 
 st.write("Op basis van uw input zijn dit twee mogelijke laadstrategieën met configuraties van uw trucks")
 radio_markdown = '''

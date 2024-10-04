@@ -7,7 +7,7 @@ from streamlit_extras.switch_page_button import switch_page
 from Functions2 import *
 from Functions import *
 
-st.set_page_config(page_title="Ritprofielen", page_icon="📈", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Ritprofielen", page_icon="📈", initial_sidebar_state="collapsed", layout="wide")
 
 #st.sidebar.header("Ritprofielen")
 
@@ -23,8 +23,6 @@ st.title("Heavy Duty Elektrificatie tool")
 ###Ophalen variabelen uit session state
 ritdataenkel = st.session_state["df_value"]
 marge = st.session_state.marge
-
-#st.dataframe(ritdataenkel)
 
 ritdata = RitDataEnkele(ritdataenkel, st.session_state.voertuig)
                                     
@@ -75,7 +73,7 @@ Maak uw keuze uit twee laadstrategieën
 ###Keuze voertuig
 truckinput = st.radio(
     'Kies hier uw laadstrategie',
-    ('Depot laden                 ', 'Frequent laden'),horizontal = True, help=radio_markdown)
+    ('Depot laden                 ', "'s nachts + tussentijds laden"),horizontal = True, help=radio_markdown)
 
 
 st.text("Gebruik deze input voor een verkenning van welke specifieke truck dit kan zijn in de ZETI tool:")
@@ -83,11 +81,11 @@ url = "https://globaldrivetozero.org/tools/zeti/"
 st.write("Klik [hier](%s) voor de tool" % url)
 
 #truckinput = st.selectbox("Welke optie kiest u?", ("Alleen depot laden",  "Frequent laden"))
-if truckinput == 'Frequent laden':
+if truckinput == "'s nachts + tussentijds laden":
     accu = energieonderweg
 else:
     accu = energiedepot
-if truckinput == 'Frequent laden':
+if truckinput == "'s nachts + tussentijds laden":
     snelheid = np.round(ritdata["laadsnelheid"].max()).astype(int)
 else: 
     snelheid = oplaaddepot
@@ -106,13 +104,13 @@ ritdataenkel1["Rit Nr"] = ritdataenkel1["Nummer rit"]
 
 #profielsum = profielsummaken(ritdataenkel1) 
 
-ritdata, profiel, profielsum = RitDataMeerdere(ritdata, st.session_state.voertuig)
+ritdata7, profiel, profielsum = RitDataMeerdere(ritdata, st.session_state.voertuig)
 
 
 st.write("Afhankelijk van uw laadstrategie nemen we uw voertuigspecificaties mee. Wilt uw toch iets anders invullen dan kan dit hieronder")
-
-for x in range(ritdata["VoertuigNr"].nunique()):
-        ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
+#try: 
+for x in range(ritdata7["VoertuigNr"].nunique()):
+        ritdata2 = ritdata7[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
         margemax = ritdata2["Accu"].max()*(marge/100)
         exec(f'verbruikvoertuig_{x} = 0') 
         #print(ritdata2["VoertuigNr"].min())
@@ -153,10 +151,17 @@ for x in range(ritdata["VoertuigNr"].nunique()):
                 #st.dataframe(ritdata4)
                 #st.write(margemax)
                 #st.write( (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min())    
-    
-
+#except:
+      #st.error('Er is een fout opgetreden, probeer het nogmaals met een andere invoer', icon="🚨")  
+#st.dataframe(profielsum)
+####Opslaan resultaten in geheugen
 st.session_state.profielsum = profielsum
-st.session_state.ritdata3 = ritdata
+st.session_state.ritdata3 = ritdata7
+st.session_state.ritdata2 = ritdata7
+
+
+######Buttons voor switch vorige en huidige pagina########
+
 col3, col4 = st.columns(2)    
     
 with col3:
@@ -167,6 +172,8 @@ with col4:
     if st.button("Volgende"):
         switch_page("laadprofiel")  
 
+####################Pagina opmaak ######################           
+        
 ###design footer
 footer="""<style>
 a:link , a:visited{
@@ -195,4 +202,19 @@ text-align: center;
 <img src="https://i.ibb.co/sRP3VPm/design.png">
 </div>
 """
-st.markdown(footer,unsafe_allow_html=True)          
+st.markdown(footer,unsafe_allow_html=True)    
+
+####Sidebar niet zichtbaar
+st.markdown(
+    """
+<style>
+    [data-testid="collapsedControl"] {
+        display: none
+    }
+    .reportview-container .main .block-container{{f"max-width: 1000px;"
+    }}
+
+</style>
+""",
+    unsafe_allow_html=True,
+)

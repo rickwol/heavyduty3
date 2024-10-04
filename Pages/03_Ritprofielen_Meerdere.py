@@ -45,11 +45,14 @@ if DataFrame is not None:
     fig.update_yaxes(visible=False)
     fig.update_traces(
     hovertemplate=None,
-    hoverinfo='skip'
+   hoverinfo='skip'
 )
     st.write("Een visuele weergave van uw rittenpatroon over de dag")
     st.plotly_chart(fig)        
-        
+
+####opmaak van pagina    
+    
+    
 ###design footer
 footer="""<style>
 a:link , a:visited{
@@ -80,4 +83,18 @@ text-align: center;
 """
 st.markdown(footer,unsafe_allow_html=True)        
 
+####Sidebar niet zichtbaar
+st.markdown(
+    """
+<style>
+    [data-testid="collapsedControl"] {
+        display: none
+    }
+    .reportview-container .main .block-container{{f"max-width: 1000px;"
+    }}
+
+</style>
+""",
+    unsafe_allow_html=True,
+)
 
