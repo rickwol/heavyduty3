@@ -79,8 +79,8 @@ st.markdown(
 
 #st.page_link("pages/02_InAppInput.py", label = "Input")
 
-if st.button("Start"):
-    switch_page("input")
+
+st.link_button("Start", "https://heavyduty3-production.up.railway.app/Input")
 
 ###design footer
 footer="""<style>
