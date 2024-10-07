@@ -1,13 +1,34 @@
 import streamlit as st
 from st_pages import Page, add_page_title, show_pages
 
+
 st.set_page_config(page_title=None, page_icon=None, layout="centered", initial_sidebar_state="collapsed", menu_items=None)
+
+####Header
+from streamlit_navigation_bar import st_navbar
+
+styles = {
+    "nav": {
+        "background-color": "#fab529",
+        "height": "4rem",
+        "font-size": "35px",
+        "justify-content": "left"
+    }
+}
+
+
+st_navbar(
+    pages=["Heavy Duty Elektrificatie Tool"],
+    styles = styles
+
+)
+
 
 
 
 show_pages(
     [
-        Page("Hello.py", "Home", "🏠"),
+        Page("Hello.py", "Heavy Duty Elektrificatie Tool", "🏠"),
         # Can use :<icon-name>: or the actual icon
         Page("Pages/01_Input_selectie.py", "Input"),
         #Page("Pages/01_Voertuig_selectie.py", "Voertuig"), 
@@ -41,7 +62,8 @@ with open( "style.css" ) as css:
 
 
 
-st.title("Welkom bij de Heavy Duty elektrificatie tool")
+
+
 from streamlit_extras.switch_page_button import switch_page
 st.markdown(
     """
@@ -57,8 +79,8 @@ st.markdown(
 
 #st.page_link("pages/02_InAppInput.py", label = "Input")
 
-st.link_button("Start", "https://heavyduty3-production.up.railway.app/Input")
-    
+if st.button("Start"):
+    switch_page("input")
 
 ###design footer
 footer="""<style>
