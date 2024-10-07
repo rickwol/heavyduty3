@@ -7,6 +7,24 @@ from streamlit_extras.switch_page_button import switch_page
 
 st.set_page_config(page_title="Voertuigen", page_icon="📈", initial_sidebar_state="collapsed")
 
+####Header
+from streamlit_navigation_bar import st_navbar
+
+
+styles = {
+    "nav": {
+        "background-color": "#fab529",
+        "height": "4rem",
+        "font-size": "35px",
+        "justify-content": "left"
+    }
+}
+
+st_navbar(
+    pages=["Heavy Duty Elektrificatie Tool"],
+    styles = styles
+)
+
 st.markdown(
     """
 <style>
@@ -25,13 +43,16 @@ radio_markdown = '''
 
 #st.sidebar.header("Ritprofielen")
 
-st.title("Heavy Duty Elektrificatie tool")
+
+
 
 ###Keuze voertuig
 inputkeuze = st.radio(
     'Kies hier de input die u wilt gebruiken',
     ('In app invoer (1 voertuig maximaal)', 'Format Invoer (Meerdere voertuigen)'),help=radio_markdown)
 
+if inputkeuze not in st.session_state:
+    st.session_state.invoer = inputkeuze
 
 
 

@@ -11,7 +11,22 @@ st.set_page_config(page_title="Overview", page_icon="📈", initial_sidebar_stat
 #st.sidebar.header("Ritprofielen")
 ritdata = st.session_state.ritdata3
 st.dataframe(ritdata)
-st.title("Heavy Duty Elektrificatie tool")
+####Header
+from streamlit_navigation_bar import st_navbar
+
+styles = {
+    "nav": {
+        "background-color": "#fab529",
+        "height": "3.825rem",
+        "font-size": "30px",
+    }
+}
+
+st_navbar(
+    pages=["Heavy Duty Elektrificatie Tool"],
+    styles = styles
+)
+
 st.title("Overzicht")
 
 for x in range(ritdata["VoertuigNr"].nunique()):

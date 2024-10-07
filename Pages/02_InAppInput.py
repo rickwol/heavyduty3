@@ -13,7 +13,27 @@ st.set_page_config(page_title="Inappinvoer", page_icon="📈", initial_sidebar_s
 
 #st.sidebar.header("Ritprofielen")
 
-st.title("Heavy Duty Elektrificatie tool")
+#st.title("Heavy Duty Elektrificatie tool")
+
+####Header
+from streamlit_navigation_bar import st_navbar
+
+styles = {
+    "nav": {
+        "background-color": "#fab529",
+        "height": "4rem",
+        "font-size": "40px",
+        "justify-content": "left"
+    }
+}
+
+
+st_navbar(
+    pages=["Heavy Duty Elektrificatie Tool"],
+    styles = styles
+)
+
+
 
 col3, col4, = st.columns([8, 1])
 
@@ -121,39 +141,44 @@ with col3:
     if "df_value" not in st.session_state:
         st.session_state.df_value = df
         st.rerun()
+        
+    if "df_value" in st.session_state:
+        df = st.session_state.df_value
 
+    edited_df = st.data_editor(df, key="editor",  num_rows="dynamic")
 
+#     ###update df functie
+#     def update(edited_df):
+#         for row_1, row_2, row_3, row_4, row_5, row_6 in zip(
+#             edited_df["Nummer rit"], edited_df["Starttijd Rit"], edited_df['Eindtijd Rit'], edited_df["Aantal kilometers"], edited_df["Kan laden op einde rit"], edited_df["Locatie einde rit: (Depot of Anders)"] 
+#         ):
+#             st.write(
+#                 ""
+#             )
+            
+#     edited_df =  st.data_editor(st.session_state["df_value"],key="editor",  num_rows="dynamic")
+            
+#     ###Edit ritten
+#     if df.equals(st.session_state["df_value"]): 
+#         edited_df = st.data_editor(df,key="editor",  num_rows="dynamic")
 
-
-
-    ###update df functie
-    def update(edited_df):
-        for row_1, row_2, row_3, row_4, row_5, row_6 in zip(
-            edited_df["Nummer rit"], edited_df["Starttijd Rit"], edited_df['Eindtijd Rit'], edited_df["Aantal kilometers"], edited_df["Kan laden op einde rit"], edited_df["Locatie einde rit: (Depot of Anders)"] 
-        ):
-            st.write(
-                ""
-            )
-
-    ###Edit ritten
-    if df.equals(st.session_state["df_value"]): 
-        edited_df = st.data_editor(df,key="editor",  num_rows="dynamic")
-
-    else:
-        edited_df = st.data_editor(st.session_state["df_value"],key="editor",  num_rows="dynamic")
+#     else:
+#         edited_df = st.data_editor(st.session_state["df_value"],key="editor",  num_rows="dynamic")
 
     ###Controleer of df zelfde als edited_Df ander supdate session state
 
+              
+    if st.button("Toets data"): 
 
-
-    if edited_df is not None and not edited_df.equals(st.session_state["df_value"]):
-        # This will only run if
-        # 1. Some widget has been changed (including the dataframe editor), triggering a
-        # script rerun, and
-        # 2. The new dataframe value is different from the old value
-        update(edited_df)
-        st.session_state["df_value"] = edited_df
-        st.rerun()
+    
+        if edited_df is not None and not edited_df.equals(st.session_state["df_value"]):
+                # This will only run if
+                # 1. Some widget has been changed (including the dataframe editor), triggering a
+                # script rerun, and
+                # 2. The new dataframe value is different from the old value
+                #update(edited_df)
+                st.session_state["df_value"] = edited_df
+                st.rerun()
 
     try:
         ritdata = RitDataEnkele(st.session_state["df_value"], st.session_state.voertuig)
@@ -223,6 +248,7 @@ text-align: center;
 </div>
 """
 st.markdown(footer,unsafe_allow_html=True)     
+
 
 ####Sidebar ### niet zichtbaar
 st.markdown(

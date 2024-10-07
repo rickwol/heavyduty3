@@ -9,7 +9,24 @@ st.set_page_config(page_title="Laadprofiel", page_icon="📈", initial_sidebar_s
 
 #st.sidebar.header("Ritprofielen")
 
-st.title("Heavy Duty Elektrificatie tool")
+####Header
+from streamlit_navigation_bar import st_navbar
+
+styles = {
+    "nav": {
+        "background-color": "#fab529",
+        "height": "4rem",
+        "font-size": "40px",
+        "justify-content": "left"
+    }
+}
+
+
+st_navbar(
+    pages=["Heavy Duty Elektrificatie Tool"],
+    styles = styles
+)
+
 
 
 st.write("Vul hier het rittenpatroon in voor een dag met een maximaal aantal kilometers")
@@ -24,6 +41,7 @@ df2 = st.session_state.profielsum
 date = "2023-01-01"
 
 
+
 df2["Tijdstip"] = pd.to_datetime(df2["Tijdlijst"])
 df2["Load(kW)"] = df2["laadsnelheid"]
 fig = px.line(df2, x="Tijdstip", y="Load(kW)", title= "Laadprofiel")
@@ -34,7 +52,10 @@ st.plotly_chart(fig)
 col3, col4 = st.columns(2)
 with col3:
     if st.button("Vorige"):
-        switch_page("opties")
+        if st.session_state.invoer == 'In app invoer (1 voertuig maximaal)':
+            switch_page("voertuig keuze")
+        else:
+            switch_page("opties")
 with col4:
     if st.button("Volgende"):
         switch_page("netaansluiting")

@@ -10,7 +10,24 @@ st.set_page_config(page_title="Ritprofielen meerdere voertuigen", page_icon="ðŸ“
 
 #st.sidebar.header("Ritprofielen")
 
-st.title("Heavy Duty Elektrificatie tool")
+####Header
+from streamlit_navigation_bar import st_navbar
+
+styles = {
+    "nav": {
+        "background-color": "#fab529",
+        "height": "4rem",
+        "font-size": "40px",
+        "justify-content": "left"
+    }
+}
+
+
+st_navbar(
+    pages=["Heavy Duty Elektrificatie Tool"],
+    styles = styles
+)
+
 
 st.write("Download de excel file om de ritprofielen voor meerdere voertuigen in te vullen. In het huidige formulier staat reeds een voorbeeld ingevuld. Voor een verdere instructie zie de losse handleiding of instructies in het tweede tabblad")
 with open("Pages/Invulformulier.xlsx", "rb") as file:

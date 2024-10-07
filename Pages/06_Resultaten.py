@@ -11,7 +11,24 @@ st.set_page_config(page_title="Ritprofielen", page_icon="📈", initial_sidebar_
 
 #st.sidebar.header("Ritprofielen")
 
-st.title("Heavy Duty Elektrificatie tool")
+####Header
+from streamlit_navigation_bar import st_navbar
+
+styles = {
+    "nav": {
+        "background-color": "#fab529",
+        "height": "4rem",
+        "font-size": "40px",
+        "justify-content": "left"
+    }
+}
+
+
+st_navbar(
+    pages=["Heavy Duty Elektrificatie Tool"],
+    styles = styles
+)
+
 
 # if "df_value" not in st.session_state:
 #     if "df_meerdere" not in st.session_state:
