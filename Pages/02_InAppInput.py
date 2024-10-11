@@ -7,13 +7,10 @@ from streamlit_extras.switch_page_button import switch_page
 import plotly.figure_factory as ff
 from Functions2 import *
 from Functions import *
-import warnings
+
 
 st.set_page_config(page_title="Inappinvoer", page_icon="📈", initial_sidebar_state="collapsed")
 
-####ignore unimportant warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
-pd.options.mode.chained_assignment = None  
 #st.sidebar.header("Ritprofielen")
 
 #st.title("Heavy Duty Elektrificatie tool")
