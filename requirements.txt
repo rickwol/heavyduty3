@@ -9,3 +9,4 @@ streamlit_extras == 0.2.7
 openpyxl == 3.0.10
 fpdf == 1.7.2
 streamlit_navigation_bar == 3.0.1
+warnings == 3.7
