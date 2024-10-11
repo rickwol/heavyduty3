@@ -75,10 +75,10 @@ Door een beperkt aantal stappen te volgen en een keuze te maken over uw laadstra
     unsafe_allow_html=True
 )
 
-#st.page_link("pages/02_InAppInput.py", label = "Input")
+st.link_button("Start", "https://heavyduty3-production.up.railway.app/Input")
 
-if st.button("Start"):
-    switch_page("input")
+# if st.button("Start"):
+#     switch_page("input")
 
 ###design footer
 footer="""<style>
