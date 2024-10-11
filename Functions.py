@@ -1,4 +1,3 @@
-
 def RitDataMeerdere(ritdata, marge):
     
     import pandas as pd
@@ -60,6 +59,12 @@ def RitDataMeerdere(ritdata, marge):
     ritdata["difftime"] = np.where(ritdata["difftime"] < -0.16, ((mini - ritdata["Endtime"]).dt.total_seconds()/3600)-0.16 ,ritdata["difftime"] )
     ritdata["difftime"].fillna(((mini - ritdata["Endtime"]).dt.total_seconds()/3600)-0.16, inplace = True)
     ###klopt deze?
+    ritdata["Rittijd"] = ((ritdata["Endtime"]-ritdata["Starttime"]).dt.total_seconds()/3600)
+    ritdata["verbruikextra"] = np.where(ritdata.Functionaliteit == "Lift Vuilnis" , 0.2 * ritdata["Lifts per uur (indien van toepassing)"],0)
+    ritdata["verbruikextra"] = np.where(ritdata.Functionaliteit == "Lift Anders" , 0.2 * ritdata["Lifts per uur (indien van toepassing)"],ritdata["verbruikextra"])
+    ritdata["verbruikextra"] = np.where(ritdata.Functionaliteit == "Koeling" , 6,ritdata["verbruikextra"])
+    ritdata["Energieextra"] = ritdata["verbruikextra"] * ritdata["Rittijd"]
+    
     ritdata["Aantalritten"] = (ritdata.
               groupby(['VoertuigNr'])["Rit Nr"].transform('max'))
     ritdata["laadsnelheid"] =  (ritdata["KMber"] * (1-(marge/100)) * ritdata["Verbruik"]/  ritdata["difftime"]) 
@@ -85,7 +90,7 @@ def RitDataMeerdere(ritdata, marge):
     # ####Ritdata check accu
     ritdata["Accu"] = 0 #in te stellen op basis van berekening of invulveld
 
-    ritdata["EnergieVerbruik"] = -(ritdata["KM"] * ritdata["Verbruik"])
+    ritdata["EnergieVerbruik"] = -(ritdata["KM"] * ritdata["Verbruik"] + ritdata["Energieextra"])
 
     ritdata["Energieopladen"] = np.where(ritdata["laadsnelheid"] > 0, ritdata["difftime"] * ritdata["laadsnelheid"], 0)
     ritdata["Accu"] = ritdata.groupby(["VoertuigNr"])["KMber"].transform('max')
@@ -111,7 +116,7 @@ def RitDataMeerdere(ritdata, marge):
 
     ritdata["Accu"] = np.where(ritdata["Accu"] >ritdata.KMber.max()/(1-(marge/100))*ritdata["Verbruik"], (1-(marge/100))*ritdata["Verbruik"], ritdata["Accu"])
     
-    ritdata["laadsnelheid"] = np.where(ritdata["Rit Nr"] == ritdata["Aantalritten"], ((ritdata['Accu'].max()-ritdata["Accu"].shift(1)) - ritdata["EnergieVerbruik"])/8, ritdata["laadsnelheid"]) 
+    ritdata["laadsnelheid"] = np.where(ritdata["Rit Nr"] == ritdata["Aantalritten"], (ritdata['Energieopladen']/8), ritdata["laadsnelheid"]) 
     
     profiel = pd.DataFrame(ritdata.explode(["Tijdlijst"]).reset_index())
     profielsum = pd.DataFrame(profiel.groupby(["Tijdlijst"]).laadsnelheid.sum()).reset_index()
@@ -131,7 +136,7 @@ def RitDataMeerdereAanpassen(ritdata):
     # ####Ritdata check accu
     #ritdata["Accu"] = 0 #in te stellen op basis van berekening of invulveld
 
-    ritdata["EnergieVerbruik"] = -(ritdata["KM"] * ritdata["Verbruik"])
+    ritdata["EnergieVerbruik"] = -(ritdata["KM"] * ritdata["Verbruik"]+ritdata["Energieextra"])
 
     ritdata["Energieopladen"] = np.where(ritdata["laadsnelheid"] > 0, ritdata["difftime"] * ritdata["laadsnelheid"], 0)
     ritdata["Accu"] = ritdata.groupby(["VoertuigNr"])["Accu"].transform('max')
@@ -155,7 +160,7 @@ def RitDataMeerdereAanpassen(ritdata):
                 ritdata["Energieopladen"][x] =  ritdata['Accumax'][x] - ritdata["Accu"][x-1] + ritdata["EnergieVerbruik"][x]
             ritdata["Accu"] = np.where(ritdata["Accu"] > ritdata['Accumax'],ritdata['Accumax'], ritdata["Accu"])
     
-    ritdata["laadsnelheid"] = np.where(ritdata["Rit Nr"] == ritdata["Aantalritten"], (ritdata['Accumax']-ritdata["Accu"]+ ritdata["EnergieVerbruik"])/8, ritdata["laadsnelheid"])
+    ritdata["laadsnelheid"] = np.where(ritdata["Rit Nr"] == ritdata["Aantalritten"], (ritdata['Energieopladen']/8), ritdata["laadsnelheid"])
     
     profiel = pd.DataFrame(ritdata.explode(["Tijdlijst"]).reset_index())
     profielsum = pd.DataFrame(profiel.groupby(["Tijdlijst"]).laadsnelheid.sum()).reset_index()

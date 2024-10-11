@@ -1,9 +1,13 @@
-def RitDataEnkele(ritdata, voertuig):
+def RitDataEnkele(ritdata, voertuig, verbruikextra):
     
     import pandas as pd
     import numpy as np
     import datetime
     import streamlit as st
+    import warnings
+    
+    warnings.simplefilter(action='ignore', category=FutureWarning)
+    pd.options.mode.chained_assignment = None  
     
     ritdata["KM"] = ritdata["Aantal kilometers"]
     
@@ -12,6 +16,8 @@ def RitDataEnkele(ritdata, voertuig):
     ritdata["difftime"] = ((ritdata["Starttime"].shift(-1) - ritdata["Endtime"]).dt.total_seconds()/3600)-0.16
     ritdata["difftime"] = np.where(ritdata["difftime"] < 0, 12, ritdata["difftime"])
     ritdata["difftime"] = np.where(ritdata["difftime"].isna(), 12, ritdata["difftime"])
+    ritdata["Rittijd"] = ((ritdata["Endtime"]-ritdata["Starttime"]).dt.total_seconds()/3600)
+    ritdata["Energieextra"] = verbruikextra * ritdata["Rittijd"]
     ritdata["Kan laden op einde rit"] = np.where((ritdata["difftime"]<0.5), False, ritdata["Kan laden op einde rit"])
     ritdata["Kan laden op einde rit"] = np.where((ritdata["Nummer rit"] == ritdata["Nummer rit"].max()), True , ritdata["Kan laden op einde rit"])
     for z in range(len(ritdata["Aantal kilometers"])):
@@ -30,7 +36,7 @@ def RitDataEnkele(ritdata, voertuig):
     ritdata["Starttime"] = pd.to_datetime('2023-01-01 ' + ritdata["Starttijd Rit"])
     ritdata["Endtime"] = pd.to_datetime('2023-01-01 ' + ritdata["Eindtijd Rit"])
     ritdata["difftime"] = ((ritdata["Starttime"].shift(-1) - ritdata["Endtime"]).dt.total_seconds()/3600)-0.16
-    ritdata["laadsnelheid"] =  ((ritdata["KM"] * voertuig)/  ritdata["difftime"])
+    ritdata["laadsnelheid"] =  (((ritdata["KM"] * voertuig)+ritdata["Energieextra"])/  ritdata["difftime"])
     ritdata["laadsnelheid"] = np.where(ritdata["Kan laden op einde rit"] == False, 0, ritdata["laadsnelheid"])
     ritdata["laadsnelheid"].fillna((ritdata["Aantal kilometers"].sum()* voertuig)/12, inplace=True)
 
