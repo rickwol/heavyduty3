@@ -10,7 +10,6 @@ st.set_page_config(page_title="Overview", page_icon="📈", initial_sidebar_stat
 
 #st.sidebar.header("Ritprofielen")
 ritdata = st.session_state.ritdata3
-st.dataframe(ritdata)
 ####Header
 from streamlit_navigation_bar import st_navbar
 

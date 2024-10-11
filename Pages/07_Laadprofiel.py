@@ -37,14 +37,19 @@ Aantaltrucks=  1
 st.write("Op basis van uw eerdere input zou uw laadprofiel erg ongeveer zo uit komen te zien")
 
 #df2 = pd.read_csv("profiel.csv", sep=";")
-df2 = st.session_state.profielsum
+df2 = st.session_state.profielsum.copy(deep=True)
 date = "2023-01-01"
+df3 = pd.DataFrame(pd.date_range("1900-01-01 0:00:00","1900-01-02 0:00:00", freq='5T'))
+df3.rename(columns={df3.columns[0]: 'Tijdlijst'}, inplace=True)
+df2["Tijdlijst"] = pd.to_datetime(df2["Tijdlijst"])
+df4 =df2.merge(df3, on="Tijdlijst", how="outer")
+df4.laadsnelheid.fillna(0, inplace=True)
+df4["Tijdstip"] = pd.to_datetime(df4["Tijdlijst"])
+df4["Load(kW)"] = df4["laadsnelheid"]
 
 
 
-df2["Tijdstip"] = pd.to_datetime(df2["Tijdlijst"])
-df2["Load(kW)"] = df2["laadsnelheid"]
-fig = px.line(df2, x="Tijdstip", y="Load(kW)", title= "Laadprofiel")
+fig = px.line(df4, x="Tijdstip", y="Load(kW)", title= "Laadprofiel")
 fig.update_xaxes(tickformat="%H:%M:%S")
 
 
@@ -62,7 +67,7 @@ with col4:
 
 
 if "maxvermogen" not in st.session_state:
-    st.session_state.maxvermogen = df2["Load(kW)"].max()
+    st.session_state.maxvermogen = df4["Load(kW)"].max()
 
     ###design footer
 footer="""<style>

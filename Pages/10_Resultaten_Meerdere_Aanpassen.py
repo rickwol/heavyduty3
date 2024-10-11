@@ -145,7 +145,7 @@ st.session_state.profielsum = profielsum
 col3, col4 = st.columns(2)
 with col3:
     if st.button("Vorige"):
-        switch_page("ritprofiel_gemiddeld")
+        switch_page("meerdere voertuig keuze")
     
 with col4:
     if st.button("Volgende"):

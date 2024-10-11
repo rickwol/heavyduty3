@@ -7,10 +7,13 @@ from streamlit_extras.switch_page_button import switch_page
 import plotly.figure_factory as ff
 from Functions2 import *
 from Functions import *
+import warnings
 
 st.set_page_config(page_title="Inappinvoer", page_icon="📈", initial_sidebar_state="collapsed")
 
-
+####ignore unimportant warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+pd.options.mode.chained_assignment = None  
 #st.sidebar.header("Ritprofielen")
 
 #st.title("Heavy Duty Elektrificatie tool")
@@ -60,7 +63,7 @@ with col3:
     optiesvoertuig =  st.selectbox("Welke andere energievebruikers heeft uw voertuig?",
                                             ("Geen", "Koeling", "Lift: Vuilnis", "Lift Anders"),
                                    help=radio_markdown)
-
+    
 
     st.write("De keuzes voor uw voertuig en opties hangen samen met het energieverbruik")
     st.write("Wilt u deze inzien en aanpassen, dan kan dit hieronder")
@@ -79,26 +82,27 @@ with col3:
         verbruikvoertuig = st.number_input('Energieverbruik voertuig kWh/km', value= tempverbruikvoertuig)
         st.write(optiesvoertuig)
         if optiesvoertuig == "Koeling":
-            verbruikopties  = st.number_input('Energieverbruik koeling kWh/uur', value=6)
+            verbruikextra  = st.number_input('Energieverbruik koeling kWh/uur', value=6)
         elif optiesvoertuig == "Geen":
             st.text("Geen additioneel verbruik")    
-            verbruikopties = 0
+            verbruikextra = 0
         else: 
             verbruikopties = st.number_input('Energieverbruik opties kWh/lift', value=0.2)
             Aantallifts = st.number_input('Aantal lifts per uur', value=10)
-
+            verbruikextra = verbruikopties * Aantallifts
 
     ###Store inputs in session state
     if "voertuig" not in st.session_state:
         st.session_state.voertuig = 1/verbruikvoertuig
         st.rerun()
     if "opties" not in st.session_state:
-        st.session_state.opties = verbruikopties
+        st.session_state.opties = verbruikextra
         st.rerun()
     if "typevoertuig" not in st.session_state:
         st.session_state.typevoertuig = voertuig
         st.rerun()
-
+        
+    st.session_state.opties = verbruikextra
     #Aantalritten =  st.number_input('Hoeveel ritten op 1 dag?', step = 1, min_value= 5) -3
     radio_markdown = '''
     Er wordt een marge aangehouden om onvoorziene situaties mee te kunnen nemen (Standaard 10%) en om de veroudering van de batterij over de tijd mee te nemen (10%). Kleinere marges worden niet geadviseerd.
@@ -166,11 +170,9 @@ with col3:
 #         edited_df = st.data_editor(st.session_state["df_value"],key="editor",  num_rows="dynamic")
 
     ###Controleer of df zelfde als edited_Df ander supdate session state
-
               
     if st.button("Toets data"): 
-
-    
+   
         if edited_df is not None and not edited_df.equals(st.session_state["df_value"]):
                 # This will only run if
                 # 1. Some widget has been changed (including the dataframe editor), triggering a
@@ -180,27 +182,28 @@ with col3:
                 st.session_state["df_value"] = edited_df
                 st.rerun()
 
-    try:
-        ritdata = RitDataEnkele(st.session_state["df_value"], st.session_state.voertuig)
+        try:
+            ritdata = RitDataEnkele(st.session_state["df_value"], st.session_state.voertuig, st.session_state.opties)
 
-        try:   
-            edited_df2 = edited_df
-            edited_df2["Rit"] = ""
-            edited_df2["Starttijd Rit"] = "1970-01-01 " + edited_df2["Starttijd Rit"]
-            edited_df2["Eindtijd Rit"] = "1970-01-01 " + edited_df2["Eindtijd Rit"]
-            edited_df2 = edited_df2[["Rit", "Starttijd Rit", "Eindtijd Rit"]]
-            fig = px.timeline(edited_df2, x_start ="Starttijd Rit", x_end ="Eindtijd Rit", y= "Rit", height=200)
-            fig.update_xaxes(tickformat="%H:%M:%S")
-            fig.update_traces(
-               hovertemplate=None,
-               hoverinfo='skip'
-            )
-            st.write("Een visuele weergave van uw rittenpatroon over de dag")
-            st.plotly_chart(fig)
+            try:   
+                edited_df2 = edited_df.copy(deep=True)
+                edited_df2["Rit"] = ""
+                edited_df2["Starttijd Rit"] = "1970-01-01 " + edited_df2["Starttijd Rit"]
+                edited_df2["Eindtijd Rit"] = "1970-01-01 " + edited_df2["Eindtijd Rit"]
+                edited_df2 = edited_df2[["Rit", "Starttijd Rit", "Eindtijd Rit"]]
+                fig = px.timeline(edited_df2, x_start ="Starttijd Rit", x_end ="Eindtijd Rit", y= "Rit", height=200)
+                fig.update_xaxes(tickformat="%H:%M:%S")
+                fig.update_traces(
+                   hovertemplate=None,
+                   hoverinfo='skip'
+                )
+                st.write("Een visuele weergave van uw rittenpatroon over de dag")
+                st.plotly_chart(fig)
+            except:
+                st.error('Er is een fout opgetreden, controleer nog eenmaals de invoer. /n Heeft u een veld leeg gelaten? Gebruik het prullenbak icoontje om een regel te verwijderen', icon="🚨") 
         except:
-            st.error('Er is een fout opgetreden, controleer nog eenmaals de invoer. /n Heeft u een veld leeg gelaten? Gebruik het prullenbak icoontje om een regel te verwijderen', icon="🚨") 
-    except:
-        st.error('Er is een fout opgetreden, controleer nog eenmaals de invoer. \n Heeft u een veld leeg gelaten? Gebruik het prullenbak icoontje om een regel te verwijderen', icon="🚨") 
+             st.error('Er is een fout opgetreden, controleer nog eenmaals de invoer. \n Heeft u een veld leeg gelaten? Gebruik het prullenbak icoontje om een regel te verwijderen', icon="🚨") 
+
 
 
 

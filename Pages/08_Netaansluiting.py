@@ -62,7 +62,7 @@ elif Netaansluiting == "<175MVA":
 elif Netaansluiting == "<500MVA":
     vermogen = 500
 
-vermogen = vermogen + st.session_state.profielsum["Load(kW)"].max()
+vermogen = vermogen + st.session_state.maxvermogen
 
 vermogencat = 17.5
 

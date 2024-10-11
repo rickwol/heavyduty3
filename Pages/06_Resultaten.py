@@ -38,13 +38,12 @@ st_navbar(
 #         else:
 #             ritdata = st.session_state["df_value"]
 ###Ophalen variabelen uit session state
-ritdataenkel = st.session_state["df_value"]
+ritdataenkel = st.session_state["df_value"].copy(deep=True)
 marge = st.session_state.marge
-
-ritdata = RitDataEnkele(ritdataenkel, st.session_state.voertuig)
-                                    
+ 
+ritdata = RitDataEnkele(ritdataenkel, st.session_state.voertuig, st.session_state.opties)                           
 rit1 =  ritdata["Aantal kilometers"].head(1)
-#st.dataframe(ritdata)
+
 if ritdata["Aantal kilometers"].shape[0]>1:
     andereritten = ritdata["KM"].tail(-1).max()#/0.8
 else:
@@ -53,12 +52,12 @@ kilometers = float(np.maximum(rit1, andereritten)) ###Maximum van alle ritten
 
 kilomterssom = ritdata["Aantal kilometers"].sum() ###Totaalkilometers
 
-energieonderweg = int(kilometers/(1-(marge/100)) * st.session_state.voertuig)
-energiedepot = int(kilomterssom/(1-(marge/100)) * st.session_state.voertuig)
+energieonderweg = int(kilometers/(1-(marge/100)) * st.session_state.voertuig) + ritdata["Energieextra"].sum()
+energiedepot = int(kilomterssom/(1-(marge/100)) * st.session_state.voertuig) + ritdata["Energieextra"].sum()
 
 oplaaddepot = int(np.round(ritdata["laadsnelheid"].tail(1)))
 
-#st.dataframe(ritdata)
+
 
 st.write("Op basis van uw input zijn dit twee trucks in combinatie met laadpalen afhankelijk van de laadstrategie")
 
@@ -102,6 +101,7 @@ if truckinput == "'s nachts + tussentijds laden":
     accu = energieonderweg
 else:
     accu = energiedepot
+    ritdata["Kan laden op einde rit"] = np.where(ritdata["Nummer rit"] < ritdata["Nummer rit"].max(), "Nee", "Ja") 
 if truckinput == "'s nachts + tussentijds laden":
     snelheid = np.round(ritdata["laadsnelheid"].max()).astype(int)
 else: 
@@ -117,6 +117,7 @@ ritdataenkel1["Type voertuig"] =  st.session_state.typevoertuig
 ritdataenkel1["KM"] = ritdataenkel1["Aantal kilometers"]
 ritdataenkel1["Rit Nr"] = ritdataenkel1["Nummer rit"] 
 
+
 #st.dataframe(ritdataenkel1)
 
 #profielsum = profielsummaken(ritdataenkel1) 
@@ -126,6 +127,7 @@ ritdata7, profiel, profielsum = RitDataMeerdere(ritdata, st.session_state.voertu
 
 st.write("Afhankelijk van uw laadstrategie nemen we uw voertuigspecificaties mee. Wilt uw toch iets anders invullen dan kan dit hieronder")
 #try: 
+
 for x in range(ritdata7["VoertuigNr"].nunique()):
         ritdata2 = ritdata7[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
         margemax = ritdata2["Accu"].max()*(marge/100)
@@ -158,6 +160,7 @@ for x in range(ritdata7["VoertuigNr"].nunique()):
                 exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "laadsnelheid"] = laadvoertuig_{x}')
                 ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata)
                 ritdata4 = ritdata3[ritdata3["VoertuigNr"] == x+1].reset_index(drop=True)
+                st.dataframe(ritdata3)
                 margemax = ritdata4.KMber.max()*ritdata4["Verbruik"].max()*(marge/100)
                 if (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min() < 0:
                     st.write(":red[Met deze combinatie van specificaties kunt u uw ritten **niet** uitvoeren]")
@@ -165,13 +168,13 @@ for x in range(ritdata7["VoertuigNr"].nunique()):
                     st.write(":orange[Met deze combinatie van specificaties kunt u uw ritten uitvoeren maar heeft u minder veiligheidsmarge dan gewenst]")             
                 else:
                     st.write(":green[Met deze combinatie van specificaties kunt u uw ritten **wel** uitvoeren]")
-                #st.dataframe(ritdata4)
                 #st.write(margemax)
                 #st.write( (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min())    
 #except:
       #st.error('Er is een fout opgetreden, probeer het nogmaals met een andere invoer', icon="🚨")  
 #st.dataframe(profielsum)
 ####Opslaan resultaten in geheugen
+
 st.session_state.profielsum = profielsum
 st.session_state.ritdata3 = ritdata7
 st.session_state.ritdata2 = ritdata7
