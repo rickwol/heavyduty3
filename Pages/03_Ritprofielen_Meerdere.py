@@ -28,50 +28,54 @@ st_navbar(
     styles = styles
 )
 
+col3, col4, = st.columns([8, 1])
 
-st.markdown("""Download de excel file om de ritprofielen voor meerdere voertuigen in te vullen. In het huidige formulier staat reeds een voorbeeld ingevuld. Voor een verdere instructie zie de losse <a href="https://surfdrive.surf.nl/files/index.php/s/DJm2F9LwrIYqdC8">handleiding</a> of instructies in het tweede tabblad<br><br>
-Indien het formulier goed is ingevuld krijgt een visuele weergave van het rittenpatroon.
+with col3:
 
-""", unsafe_allow_html=True)
-with open("Pages/Invulformulier.xlsx", "rb") as file:
-    st.download_button(label = "Download", data=file, file_name="Invulformulier.xlsx")
+    st.markdown("""Download de excel file om de ritprofielen voor meerdere voertuigen in te vullen. In het huidige formulier staat reeds een voorbeeld ingevuld. Voor een verdere instructie zie de losse <a href="https://surfdrive.surf.nl/files/index.php/s/DJm2F9LwrIYqdC8">handleiding</a> of instructies in het tweede tabblad<br><br>
+    Indien het formulier goed is ingevuld krijgt een visuele weergave van het rittenpatroon.
 
-st.write("Indien je het formulier hebt ingevuld kun je hier uploaden")
+    """, unsafe_allow_html=True)
+    with open("Pages/Invulformulier.xlsx", "rb") as file:
+        st.download_button(label = "Download", data=file, file_name="Invulformulier.xlsx")
 
-DataFrame = st.file_uploader(label = "Upload")
-if DataFrame is not None:
-    DataFrame2 = pd.read_excel(DataFrame, converters={'Starttijd': str,'eindtijd': str} )
-    st.session_state.df_value = DataFrame2
+    st.write("Indien je het formulier hebt ingevuld kun je hier uploaden")
 
-col1, col2, = st.columns(2)
+    DataFrame = st.file_uploader(label = "Upload")
+    if DataFrame is not None:
+        DataFrame2 = pd.read_excel(DataFrame, converters={'Starttijd': str,'eindtijd': str} )
+        st.session_state.df_value = DataFrame2
 
-with col1:
-    if st.button("Vorige"):
-        switch_page("input")
-    
-with col2:
-    if st.button("Volgende"):
-        switch_page("meerdere voertuig keuze")    
+    col1, col2, = st.columns(2)
 
-if DataFrame is not None:      
-    edited_df2 = DataFrame2
-    edited_df2["Starttijd"] = "1970-01-01 " + edited_df2["Starttijd"]
-    edited_df2["Eindtijd"] = "1970-01-01 " + edited_df2["Eindtijd"]
-    edited_df2 = edited_df2[["VoertuigNr", "Starttijd", "Eindtijd"]]
-    heightfig = edited_df2["VoertuigNr"].max()*150
-    edited_df2["VoertuigNr"]=edited_df2["VoertuigNr"].astype(str)
-    fig = px.timeline(edited_df2, x_start ="Starttijd", x_end ="Eindtijd", y= "VoertuigNr", color= "VoertuigNr", height=heightfig)
-    fig.update_xaxes(tickformat="%H:%M:%S")
-    fig.update_yaxes(visible=False)
-    fig.update_traces(
-    hovertemplate=None,
-   hoverinfo='skip'
-)
-    st.write("Een visuele weergave van uw rittenpatroon over de dag")
-    st.plotly_chart(fig)        
+    with col1:
+        if st.button("Vorige"):
+            switch_page("input")
+
+    with col2:
+        if st.button("Volgende"):
+            switch_page("meerdere voertuig keuze")    
+
+    if DataFrame is not None:      
+        edited_df2 = DataFrame2
+        edited_df2["Starttijd"] = "1970-01-01 " + edited_df2["Starttijd"]
+        edited_df2["Eindtijd"] = "1970-01-01 " + edited_df2["Eindtijd"]
+        edited_df2 = edited_df2[["VoertuigNr", "Starttijd", "Eindtijd"]]
+        heightfig = edited_df2["VoertuigNr"].max()*150
+        edited_df2["VoertuigNr"]=edited_df2["VoertuigNr"].astype(str)
+        fig = px.timeline(edited_df2, x_start ="Starttijd", x_end ="Eindtijd", y= "VoertuigNr", color= "VoertuigNr", height=heightfig)
+        fig.update_xaxes(tickformat="%H:%M:%S")
+        fig.update_yaxes(visible=False)
+        fig.update_traces(
+        hovertemplate=None,
+       hoverinfo='skip'
+    )
+        st.write("Een visuele weergave van uw rittenpatroon over de dag")
+        st.plotly_chart(fig)        
 
 ####opmaak van pagina    
-    
+with col4:
+    st.image("https://i.ibb.co/jfML1Fn/Progressbar1.png")
     
 ###design footer
 footer="""<style>

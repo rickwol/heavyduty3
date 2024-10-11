@@ -9,7 +9,7 @@ from Functions2 import *
 from Functions import *
 
 
-st.set_page_config(page_title="Inappinvoer", page_icon="📈", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Inappinvoer", page_icon="📈", initial_sidebar_state="collapsed", layout="wide")
 
 #st.sidebar.header("Ritprofielen")
 

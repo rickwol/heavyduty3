@@ -5,7 +5,7 @@ import plotly.express as px
 import datetime, timedelta
 from streamlit_extras.switch_page_button import switch_page
 
-st.set_page_config(page_title="Voertuigen", page_icon="📈", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="Voertuigen", page_icon="📈", initial_sidebar_state="collapsed", layout="wide")
 
 ####Header
 from streamlit_navigation_bar import st_navbar
@@ -35,40 +35,44 @@ st.markdown(
 """,
     unsafe_allow_html=True,
 )
-###Set tooltips
-st.write("U heeft de keuze om voor 1 of meerdere voertuigen uw ritgegevens in te voeren. Indien u kiest voor 1 voertuig kan dit gemakkelijk in deze applicatie zelf. Indien u ritgegevens voor meerdere voertuigen wilt invoeren moet dit via een excelformulier. In beide gevallen staan voorbeeldgegevens ingevuld zodat u direct aan de slag kan.")
-st.write("Er wordt gevraagd om ritgegevens van 1 dag in te vullen. Kies daarbij een dag met waarbij uw voertuig(en) maximaal worden ingezet")
-        
-radio_markdown = '''
-1. In app invoer: U vult ritgegevens voor 1 voertuig voor 1 dag in. U kunt kiezen voor welk type voertuig 
-2. Format invoer: U gebruikt een vastgesteld format, waarbij u voor meerdere voertuigen data in kan voeren
-'''.strip()
 
-#st.sidebar.header("Ritprofielen")
+col3, col4, = st.columns([8, 1])
 
+with col3:   
+    ###Set tooltips
+    st.write("U heeft de keuze om voor 1 of meerdere voertuigen uw ritgegevens in te voeren. Indien u kiest voor 1 voertuig kan dit gemakkelijk in deze applicatie zelf. Indien u ritgegevens voor meerdere voertuigen wilt invoeren moet dit via een excelformulier. In beide gevallen staan voorbeeldgegevens ingevuld zodat u direct aan de slag kan.")
+    st.write("Er wordt gevraagd om ritgegevens van 1 dag in te vullen. Kies daarbij een dag met waarbij uw voertuig(en) maximaal worden ingezet")
 
+    radio_markdown = '''
+    1. In app invoer: U vult ritgegevens voor 1 voertuig voor 1 dag in. U kunt kiezen voor welk type voertuig 
+    2. Format invoer: U gebruikt een vastgesteld format, waarbij u voor meerdere voertuigen data in kan voeren
+    '''.strip()
 
-
-###Keuze voertuig
-inputkeuze = st.radio(
-    'Kies hier de input die u wilt gebruiken',
-    ('In app invoer (1 voertuig maximaal)', 'Format Invoer (Meerdere voertuigen)'),help=radio_markdown)
-
-if inputkeuze not in st.session_state:
-    st.session_state.invoer = inputkeuze
+    #st.sidebar.header("Ritprofielen")
 
 
 
-if st.button("Volgende"):
-    if inputkeuze == 'Standaard profielen':
-        switch_page("ritprofiel per segment")
-    elif inputkeuze == 'In app invoer (1 voertuig maximaal)':
-        switch_page("in app input")
-    else:
-        switch_page("ritprofiel gemiddeld")
 
-        
-        
+    ###Keuze voertuig
+    inputkeuze = st.radio(
+        'Kies hier de input die u wilt gebruiken',
+        ('In app invoer (1 voertuig maximaal)', 'Format Invoer (Meerdere voertuigen)'),help=radio_markdown)
+
+    if inputkeuze not in st.session_state:
+        st.session_state.invoer = inputkeuze
+
+
+
+    if st.button("Volgende"):
+        if inputkeuze == 'Standaard profielen':
+            switch_page("ritprofiel per segment")
+        elif inputkeuze == 'In app invoer (1 voertuig maximaal)':
+            switch_page("in app input")
+        else:
+            switch_page("ritprofiel gemiddeld")
+
+with col4:    
+    st.image("https://i.ibb.co/jfML1Fn/Progressbar1.png")   
 footer="""<style>
 a:link , a:visited{
 color: blue;
