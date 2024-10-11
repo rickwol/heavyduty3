@@ -60,10 +60,11 @@ def RitDataMeerdere(ritdata, marge):
     ritdata["difftime"].fillna(((mini - ritdata["Endtime"]).dt.total_seconds()/3600)-0.16, inplace = True)
     ###klopt deze?
     ritdata["Rittijd"] = ((ritdata["Endtime"]-ritdata["Starttime"]).dt.total_seconds()/3600)
-    ritdata["verbruikextra"] = np.where(ritdata.Functionaliteit == "Lift Vuilnis" , 0.2 * ritdata["Lifts per uur (indien van toepassing)"],0)
-    ritdata["verbruikextra"] = np.where(ritdata.Functionaliteit == "Lift Anders" , 0.2 * ritdata["Lifts per uur (indien van toepassing)"],ritdata["verbruikextra"])
-    ritdata["verbruikextra"] = np.where(ritdata.Functionaliteit == "Koeling" , 6,ritdata["verbruikextra"])
-    ritdata["Energieextra"] = ritdata["verbruikextra"] * ritdata["Rittijd"]
+    if ritdata["Energieextra"] is None: 
+        ritdata["verbruikextra"] = np.where(ritdata.Functionaliteit == "Lift Vuilnis" , 0.2 * ritdata["Lifts per uur (indien van toepassing)"],0)
+        ritdata["verbruikextra"] = np.where(ritdata.Functionaliteit == "Lift Anders" , 0.2 * ritdata["Lifts per uur (indien van toepassing)"],ritdata["verbruikextra"])
+        ritdata["verbruikextra"] = np.where(ritdata.Functionaliteit == "Koeling" , 6,ritdata["verbruikextra"])
+        ritdata["Energieextra"] = ritdata["verbruikextra"] * ritdata["Rittijd"]
     
     ritdata["Aantalritten"] = (ritdata.
               groupby(['VoertuigNr'])["Rit Nr"].transform('max'))
