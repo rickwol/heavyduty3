@@ -160,7 +160,6 @@ for x in range(ritdata7["VoertuigNr"].nunique()):
                 exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "laadsnelheid"] = laadvoertuig_{x}')
                 ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata)
                 ritdata4 = ritdata3[ritdata3["VoertuigNr"] == x+1].reset_index(drop=True)
-                st.dataframe(ritdata3)
                 margemax = ritdata4.KMber.max()*ritdata4["Verbruik"].max()*(marge/100)
                 if (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min() < 0:
                     st.write(":red[Met deze combinatie van specificaties kunt u uw ritten **niet** uitvoeren]")
