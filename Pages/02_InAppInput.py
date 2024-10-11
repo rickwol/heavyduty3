@@ -35,9 +35,9 @@ st_navbar(
 
 
 
-col3, col4, = st.columns([8, 1])
+col7, col8, = st.columns([8, 1])
 
-with col3:   
+with col7:   
 
     st.write("Vul hier het rittenpatroon in voor een gemiddelde dag")
 
@@ -219,7 +219,7 @@ with col3:
         if st.button("Volgende"):
             switch_page("voertuig keuze")
 
-with col4:
+with col8:
     st.image("https://i.ibb.co/jfML1Fn/Progressbar1.png")
   
 ####Design footer        
