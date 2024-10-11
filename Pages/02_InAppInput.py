@@ -98,6 +98,9 @@ with col3:
     if "typevoertuig" not in st.session_state:
         st.session_state.typevoertuig = voertuig
         st.rerun()
+    if "optiesvoertuig" not in st.session_state:
+        st.session_state.typevoertuig = optiesvoertuig
+        st.rerun()
         
     st.session_state.opties = verbruikextra
     #Aantalritten =  st.number_input('Hoeveel ritten op 1 dag?', step = 1, min_value= 5) -3

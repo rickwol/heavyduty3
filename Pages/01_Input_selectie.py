@@ -36,6 +36,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 ###Set tooltips
+st.write("U heeft de keuze om voor 1 of meerdere voertuigen uw ritgegevens in te voeren. Indien u kiest voor 1 voertuig kan dit gemakkelijk in deze applicatie zelf. Indien u ritgegevens voor meerdere voertuigen wilt invoeren moet dit via een excelformulier. In beide gevallen staan voorbeeldgegevens ingevuld zodat u direct aan de slag kan.")
+st.write("Er wordt gevraagd om ritgegevens van 1 dag in te vullen. Kies daarbij een dag met waarbij uw voertuig(en) maximaal worden ingezet")
+        
 radio_markdown = '''
 1. In app invoer: U vult ritgegevens voor 1 voertuig voor 1 dag in. U kunt kiezen voor welk type voertuig 
 2. Format invoer: U gebruikt een vastgesteld format, waarbij u voor meerdere voertuigen data in kan voeren
