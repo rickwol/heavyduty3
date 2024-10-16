@@ -51,7 +51,7 @@ with col5:
     df4["Load(kW)"] = df4["laadsnelheid"]
     df4.drop_duplicates(subset=['Tijdstip'], inplace=True)
     df4.sort_values(by=['Tijdstip'], inplace=True)
-
+    df4["Load(kW)"] = np.where(df4["Load(kW)"] < 0, df4["Load(kW)"]*-1, df4["Load(kW)"])
 
     fig = px.line(df4, x="Tijdstip", y="Load(kW)", title= "Laadprofiel")
     fig.update_xaxes(tickformat="%H:%M:%S")
