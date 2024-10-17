@@ -195,7 +195,8 @@ with col5:
 
 ####################Pagina opmaak ######################           
 with col6:
-    st.image("https://i.ibb.co/jfML1Fn/Progressbar1.png")
+    st.image("https://i.ibb.co/x8h855s/Progressbar3.png", width=100)
+
 ###design footer
 footer="""<style>
 a:link , a:visited{
@@ -221,7 +222,9 @@ text-align: center;
 }
 </style>
 <div class="footer">
-<img src="https://i.ibb.co/sRP3VPm/design.png">
+<a href= "https://www.tno.nl"><img src="https://i.ibb.co/McjKv1z/TNOlogo.png", width="70" height="60"></a>
+<a href= "https://www.nklnederland.nl"><img src="https://i.ibb.co/rfgPP7T/Logo-NKL-2022.png", width="70" height="60"></a>
+<img src="https://i.ibb.co/K9nnLCx/design.png">
 </div>
 """
 st.markdown(footer,unsafe_allow_html=True)    
