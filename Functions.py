@@ -125,7 +125,7 @@ def RitDataMeerdere(ritdata, marge):
     return ritdata, profiel, profielsum
 
 ###Tweede functie - aanpassingen
-def RitDataMeerdereAanpassen(ritdata):
+def RitDataMeerdereAanpassen(ritdata, verbruiklift, verbruikkoeling):
     
     import pandas as pd
     import numpy as np
@@ -137,6 +137,13 @@ def RitDataMeerdereAanpassen(ritdata):
     # ####Ritdata check accu
     #ritdata["Accu"] = 0 #in te stellen op basis van berekening of invulveld
 
+    ###Energievebruik extra updaten
+    ritdata["verbruikextra"] = np.where(ritdata.Functionaliteit == "Lift Vuilnis" , verbruiklift * ritdata["Lifts per uur (indien van toepassing)"],0)
+    ritdata["verbruikextra"] = np.where(ritdata.Functionaliteit == "Lift Anders" , verbruiklift * ritdata["Lifts per uur (indien van toepassing)"],ritdata["verbruikextra"])
+    ritdata["verbruikextra"] = np.where(ritdata.Functionaliteit == "Koeling" , verbruikkoeling,ritdata["verbruikextra"])
+    ritdata["Energieextra"] = ritdata["verbruikextra"] * ritdata["Rittijd"]
+    
+    
     ritdata["EnergieVerbruik"] = -(ritdata["KM"] * ritdata["Verbruik"]+ritdata["Energieextra"])
 
     ritdata["Energieopladen"] = np.where(ritdata["laadsnelheid"] > 0, ritdata["difftime"] * ritdata["laadsnelheid"], 0)
