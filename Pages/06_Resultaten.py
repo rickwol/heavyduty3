@@ -160,7 +160,7 @@ with col5:
                     exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "Verbruik"] = verbruikvoertuig_{x}')
                     exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "Accu"] = accuvoertuig_{x}')
                     exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "laadsnelheid"] = laadvoertuig_{x}')
-                    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata)
+                    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata, 0.2, 0.6)
                     ritdata4 = ritdata3[ritdata3["VoertuigNr"] == x+1].reset_index(drop=True)
                     margemax = ritdata4.KMber.max()*ritdata4["Verbruik"].max()*(marge/100)
                     if (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min() < 0:

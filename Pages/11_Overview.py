@@ -5,6 +5,8 @@ import plotly.express as px
 import datetime, timedelta
 from streamlit_extras.switch_page_button import switch_page
 from Functions import *
+import smtplib
+from email.mime.text import MIMEText
 
 st.set_page_config(page_title="Overview", page_icon="📈", initial_sidebar_state="collapsed", layout="wide")
 
@@ -30,32 +32,32 @@ col5, col6, = st.columns([8, 1])
 with col5: 
     st.title("Overzicht")
 
-    for x in range(ritdata["VoertuigNr"].nunique()):
-        tekst = "Voor voertuig " + str(x+1)
-        st.write(tekst)
-        ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
-        types = ritdata2["Type voertuig"][0] + '\n' + "Kilometers per dag: " + ritdata2["KM"].sum().astype("str")
-        st.text_area("Input",
-                       types)
-        #ritten = "Aantal ritten: " + str(len(ritdata2["KM"])) +"\n" + "Maximale lengte rit: " + ritdata2["KM"].max().astype("str")
-        st.text_area("Ritgegeves",
-                       ritten)
-        edited_df2 = ritdata
-        edited_df2["Rit"] = "Rit"
-        edited_df2["Starttijd Rit"] = "1970-01-01 " + edited_df2["Starttijd Rit"]
-        edited_df2["Eindtijd Rit"] = "1970-01-01 " + edited_df2["Eindtijd Rit"]
-        edited_df2 = edited_df2[["Rit", "Starttijd Rit", "Eindtijd Rit"]]
-        fig = px.timeline(edited_df2, x_start ="Starttijd Rit", x_end ="Eindtijd Rit", y= "Rit", height=200)
-        fig.update_xaxes(tickformat="%H:%M:%S")
-        st.plotly_chart(fig)
-        st.text_area("Voertuigen & Laadinfrastructuur",
-                       "Omvang van accucapaciteit: .."
-                       "Laadsnelheden:")
+#     for x in range(ritdata["VoertuigNr"].nunique()):
+#         tekst = "Voor voertuig " + str(x+1)
+#         st.write(tekst)
+#         ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
+#         types = ritdata2["Type voertuig"][0] + '\n' + "Kilometers per dag: " + ritdata2["KM"].sum().astype("str")
+#         st.text_area("Input",
+#                        types)
+#         #ritten = "Aantal ritten: " + str(len(ritdata2["KM"])) +"\n" + "Maximale lengte rit: " + ritdata2["KM"].max().astype("str")
+#         #st.text_area("Ritgegeves",
+#                        #ritten)
+#         edited_df2 = ritdata
+#         edited_df2["Rit"] = "Rit"
+#         edited_df2["Starttijd Rit"] = "1970-01-01 " + edited_df2["Starttijd Rit"]
+#         edited_df2["Eindtijd Rit"] = "1970-01-01 " + edited_df2["Eindtijd Rit"]
+#         edited_df2 = edited_df2[["Rit", "Starttijd Rit", "Eindtijd Rit"]]
+#         fig = px.timeline(edited_df2, x_start ="Starttijd Rit", x_end ="Eindtijd Rit", y= "Rit", height=200)
+#         fig.update_xaxes(tickformat="%H:%M:%S")
+#         st.plotly_chart(fig)
+#         st.text_area("Voertuigen & Laadinfrastructuur",
+#                        "Omvang van accucapaciteit: .."
+#                        "Laadsnelheden:")
 
-        st.text_area("Netaansluiting",
-                       "Het benodigde additionele vermogen is: .."
-                       "Uw huidige netaansluiting is:"
-                        "Dit is onvoldoende/voldoende")
+#         st.text_area("Netaansluiting",
+#                        "Het benodigde additionele vermogen is: .."
+#                        "Uw huidige netaansluiting is:"
+#                         "Dit is onvoldoende/voldoende")
 
 
     def generate_pdf():
@@ -76,8 +78,36 @@ with col5:
         with open("example.pdf", "rb") as f:
             st.download_button("Download pdf", f, "example.pdf")
 
+    email_receiver = st.text_input('To')
+    subject = "Heavy Duty Charging Tool Resultaten"
+    body = "Beste, Bedankt voor het gebruik van de Heavy Duty Charging Tool Resultaten. In de bijlage vindt u uw resultaten. "
+    if st.button("Stuur email"):
+        email_sender = 'r.wolbertus@gmail.com'
+    
+
+# Hide the password input
+        #password = st.text_input('Password', type="password", disabled=True)  
+
+
+        try:
+            
+            msg = MIMEText(body)
+            msg['From'] = "r.wolbertus@gmail.com"
+            msg['To'] = email_receiver
+            msg['Subject'] = subject
+#             with open("example.pdf", "rb") as f:
+#                 pdfd = f
+#             msg.add_attachment(pdfd)
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login("r.wolbertus@gmail.com", "uiqa sieb pyxv gmeq")
+            server.sendmail(email_sender, email_receiver, msg.as_string())
+            server.quit()
+            st.success('Email sent successfully! 🚀')
+        except Exception as e:
+            st.error("Failed to send email")
 with col6:
-    st.image("https://i.ibb.co/mJYqJB6/Progressbar7.png", width="40")
+    st.image("https://i.ibb.co/mJYqJB6/Progressbar7.png", width=40)
     
         
 ###design footer

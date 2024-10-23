@@ -40,10 +40,7 @@ with col5:
         ritdata["Kan laden op einde rit"] = np.where((ritdata["VoertuigNr"].shift(-1) != ritdata["VoertuigNr"]), "Ja", ritdata["Kan laden op einde rit"])
         verbruik= st.session_state.marge
         ritdata, profiel, profielsum = RitDataMeerdere(ritdata, verbruik)
-
-
-    # st.dataframe(ritdata)
-
+        
     col1, col2 = st.columns(2)
 
     voertuig ='Grote bakwagen lvm > 18 ton'
@@ -79,7 +76,7 @@ with col5:
                     exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "Verbruik"] = verbruikvoertuig_{x}')
                     exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "Accu"] = accuvoertuig_{x}')
                     exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "laadsnelheid"] = laadvoertuig_{x}')
-                    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata)
+                    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata, 0.2, 0.6)
                     ritdata4 = ritdata3[ritdata3["VoertuigNr"] == x+1].reset_index(drop=True)
                     margemax = ritdata4.KMber.max()*ritdata4["Verbruik"].max()*(marge/100)
                     if (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min() < 0:
@@ -125,7 +122,7 @@ with col5:
                     exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "Verbruik"] = verbruikvoertuig_{x}')
                     exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "Accu"] = accuvoertuig_{x}')
                     exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "laadsnelheid"] = laadvoertuig_{x}')
-                    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata)
+                    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata, 0.2, 0.6)
                     ritdata4 = ritdata3[ritdata3["VoertuigNr"] == x+1].reset_index(drop=True)
                     if (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min() < 0:
                         st.write(":red[Met deze combinatie van specificaties kunt u uw ritten **niet** uitvoeren]")
@@ -138,7 +135,7 @@ with col5:
                     #st.dataframe(ritdata[ritdata["VoertuigNr"] == x+1].loc["Accu"])
 
     #st.write(accuvoertuig_1)             
-    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata)
+    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata, 0.2, 0.6)
     st.session_state.ritdata3 = ritdata3
     st.session_state.profielsum = profielsum
 

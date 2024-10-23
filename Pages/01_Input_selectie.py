@@ -72,7 +72,8 @@ with col3:
             switch_page("ritprofiel gemiddeld")
 
 with col4:    
-    st.image("https://i.ibb.co/jfML1Fn/Progressbar1.png", width=100)   
+    st.image("https://i.ibb.co/SNW5Mzg/Progressbar1.png", width=100)   
+
 footer="""<style>
 a:link , a:visited{
 color: blue;

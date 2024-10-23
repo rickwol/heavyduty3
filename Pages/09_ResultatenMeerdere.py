@@ -92,7 +92,7 @@ with col5:
             st.subheader(tekst)
             st.write("Accu:", str(np.round(energiedepot)), "kWh")
             st.write("Range:", str(np.round(energiedepot/ritdata2["Verbruik"].max())), "km")
-            st.write("Oplaadcapaciteit: ", str(oplaaddepot), "kW")
+            st.write("Laadvermogen: ", str(oplaaddepot), "kW")
 
 
     with col2:
@@ -117,7 +117,7 @@ with col5:
             st.subheader(tekst)
             st.write("Accu:", str(np.round(ritdata2["Accu"].max())), "kWh")
             st.write("Range:", str(np.round(ritdata2["Accu"].max()/ritdata2["Verbruik"].max())),"km")
-            st.write("Oplaadcapaciteit: ", str(int(np.round(ritdata2["laadsnelheid"].max()))), "kW")
+            st.write("Laadvermogen: ", str(int(np.round(ritdata2["laadsnelheid"].max()))), "kW")
 
     truckinput = st.radio(
         'Kies hier uw laadstrategie',
@@ -137,8 +137,7 @@ with col5:
 
     if truckinput == "'s nachts + tussentijds laden":
         profielsum = profielsum
-        st.dataframe(ritdata)
-        st.dataframe(profielsum)
+
 
     else:
         oplaaddepotsum = 0

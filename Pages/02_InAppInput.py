@@ -54,15 +54,25 @@ with col3:
     voertuig = st.selectbox(
         'Kies uw voertuig',
         ('Medium bakwagen lvm 12 - 18 ton', 'Grote bakwagen lvm > 18 ton', 'Lichte trekker z/opl gvm < 40 ton', "Zware trekker z/opl gvm > 40 ton"), help=radio_markdown)
-
-
+    index = 0
+    if "optiesvoertuig" in st.session_state:
+        if st.session_state.optiesvoertuig == "Geen":
+            index = 0
+        elif st.session_state.optiesvoertuig == "Koeling":
+            index = 1
+        elif st.session_state.optiesvoertuig == "Lift:Vuilnis":
+            index = 2
+        else:
+            index = 3
+           
     optiesvoertuig =  st.selectbox("Welke andere energievebruikers heeft uw voertuig?",
                                             ("Geen", "Koeling", "Lift: Vuilnis", "Lift Anders"),
-                                   help=radio_markdown)
+                                   help=radio_markdown, index = index)
 
-
+    
     st.write("De keuzes voor uw voertuig en opties hangen samen met het energieverbruik")
     st.write("Wilt u deze inzien en aanpassen, dan kan dit hieronder")
+ 
     with st.expander("Zie specificaties"):
         st.write(voertuig)
         if voertuig == 'Medium bakwagen lvm 12 - 18 ton':
@@ -84,7 +94,9 @@ with col3:
             verbruikopties = st.number_input('Energieverbruik opties kWh/lift', value=0.2)
             Aantallifts = st.number_input('Aantal lifts per uur', value=10)
             verbruikextra = verbruikopties * Aantallifts
-
+            
+    st.session_state.opties = verbruikextra
+    st.session_state.optiesvoertuig = optiesvoertuig
     ###Store inputs in session state
     if "voertuig" not in st.session_state:
         st.session_state.voertuig = 1/verbruikvoertuig
@@ -110,7 +122,6 @@ with col3:
         st.session_state.marge = 20
         st.rerun()
 
-
     marge2 = st.number_input("Hoeveel marge wilt u aanhouden voor u batterij capaciteit in procenten? De standaard waarde is 20%. Klik op het vraagteken voor meer informatie over de marge", value = st.session_state.marge, help=radio_markdown)
 
     ###Update session state op basis van input
@@ -131,7 +142,7 @@ with col3:
 
        ]
     )  
-
+    edited_df = df
 
     ###Bepaal aantal ritten
     #if(Aantalritten > 0):
@@ -146,7 +157,7 @@ with col3:
     if "df_value" in st.session_state:
         df = st.session_state.df_value
 
-    edited_df = st.data_editor(df, key="editor",  num_rows="dynamic")
+    edited_df[["Nummer rit", "Starttijd Rit", 'Eindtijd Rit', "Aantal kilometers", "Kan laden op einde rit", "Locatie einde rit: (Depot of Anders)"]] = st.data_editor(df[["Nummer rit", "Starttijd Rit", 'Eindtijd Rit', "Aantal kilometers", "Kan laden op einde rit", "Locatie einde rit: (Depot of Anders)"]], key="editor",  num_rows="dynamic")
 
     #     ###update df functie
     #     def update(edited_df):
@@ -167,6 +178,8 @@ with col3:
     #         edited_df = st.data_editor(st.session_state["df_value"],key="editor",  num_rows="dynamic")
 
     ###Controleer of df zelfde als edited_Df ander supdate session state
+    edited_df2 = edited_df.copy(deep=True)
+    edited_df2["Rit"] = ""
 
     if st.button("Toets data"): 
 
@@ -178,16 +191,25 @@ with col3:
                 #update(edited_df)
                 st.session_state["df_value"] = edited_df
                 st.rerun()
-
+        
+        
         try:
-            ritdata = RitDataEnkele(st.session_state["df_value"], st.session_state.voertuig, st.session_state.opties)
+            ritdata = RitDataEnkele(st.session_state["df_value"], st.session_state.voertuig, verbruikextra)
 
             try:   
                 edited_df2 = edited_df.copy(deep=True)
                 edited_df2["Rit"] = ""
                 edited_df2["Starttijd Rit"] = "1970-01-01 " + edited_df2["Starttijd Rit"]
+                edited_df2["Starttijd Rit"] = pd.to_datetime(edited_df2["Starttijd Rit"],
+                           format='%Y-%m-%d %H:%M')
                 edited_df2["Eindtijd Rit"] = "1970-01-01 " + edited_df2["Eindtijd Rit"]
-                edited_df2 = edited_df2[["Rit", "Starttijd Rit", "Eindtijd Rit"]]
+                edited_df2["Eindtijd Rit"] = pd.to_datetime(edited_df2["Eindtijd Rit"],
+                           format='%Y-%m-%d %H:%M')
+                for x in range(0, len(edited_df["Starttijd Rit"])-1):
+                    for z in range(x+1,len(edited_df2["Eindtijd Rit"])-1):
+                        if edited_df2["Eindtijd Rit"][x] > edited_df2["Starttijd Rit"][z]:
+                            st.error('Er is een fout opgetreden, de start en eindtijden van de ritten overlappen', icon="🚨")
+                edited_df2 = edited_df2[["Rit", "Starttijd Rit", "Eindtijd Rit"]] 
                 fig = px.timeline(edited_df2, x_start ="Starttijd Rit", x_end ="Eindtijd Rit", y= "Rit", height=200)
                 fig.update_xaxes(tickformat="%H:%M:%S")
                 fig.update_traces(
@@ -197,7 +219,7 @@ with col3:
                 st.write("Een visuele weergave van uw rittenpatroon over de dag")
                 st.plotly_chart(fig)
             except:
-                st.error('Er is een fout opgetreden, controleer nog eenmaals de invoer. /n Heeft u een veld leeg gelaten? Gebruik het prullenbak icoontje om een regel te verwijderen', icon="🚨") 
+                st.error('Er is een fout opgetreden, controleer nog eenmaals de invoer. \n Heeft u een veld leeg gelaten? Gebruik het prullenbak icoontje om een regel te verwijderen', icon="🚨") 
         except:
              st.error('Er is een fout opgetreden, controleer nog eenmaals de invoer. \n Heeft u een veld leeg gelaten? Gebruik het prullenbak icoontje om een regel te verwijderen', icon="🚨") 
 
