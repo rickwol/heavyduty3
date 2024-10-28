@@ -43,7 +43,7 @@ Er wordt een marge aangehouden om onvoorziene situaties mee te kunnen nemen (Sta
 marge = st.number_input("Hoeveel marge wilt u aanhouden voor u batterij capaciteit in procenten? De standaard waarde is 20%. Klik op het vraagteken voor meer informatie over de marge" , value = 20, help=radio_markdown)
 
 ritdata, profiel, profielsum = RitDataMeerdere(ritdata, marge)
-#st.dataframe(profielsum)
+#st.dataframe(ritdata)
 #profielsum.laadsnelheid.max()
 col5, col6, = st.columns([8, 1])
 
@@ -115,8 +115,8 @@ with col5:
             oplaaddepot = int(np.round(ritdata2["laadsnelheid"].tail(1)))
             tekst = "Voor voertuig " + str(x+1)
             st.subheader(tekst)
-            st.write("Accu:", str(np.round(ritdata2["Accu"].max())), "kWh")
-            st.write("Range:", str(np.round(ritdata2["Accu"].max()/ritdata2["Verbruik"].max())),"km")
+            st.write("Accu:", str(np.round(ritdata2["Accu"].max()/(1-(marge/100)))), "kWh")
+            st.write("Range:", str(np.round((ritdata2["Accu"].max())/(1-(marge/100))/ritdata2["Verbruik"].max())),"km")
             st.write("Laadvermogen: ", str(int(np.round(ritdata2["laadsnelheid"].max()))), "kW")
 
     truckinput = st.radio(

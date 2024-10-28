@@ -34,6 +34,9 @@ with col5:
 
     marge = st.session_state.marge
 
+    verbruikkoeling = st.number_input("Energieverbruik koeling kWh/uur", value= 0.6 , key= "koeling")
+    verbruiklift = st.number_input("Energieverbruik opties kWh/lift", value= 0.2, key= "lift")
+    
     if st.session_state.laadkeuze != "'s nachts + tussentijds laden":
         ritdata = st.session_state["df_value"]
         ritdata["Kan laden op einde rit"] = "Nee"
@@ -48,7 +51,7 @@ with col5:
     with col1:
         for x in range(ritdata["VoertuigNr"].nunique()):
             ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
-            margemax = ritdata2["Accu"].max()*(marge/100)
+            margemax = ritdata2["Accu"].max()/(1-(marge/100))
             exec(f'verbruikvoertuig_{x} = 0') 
             #print(ritdata2["VoertuigNr"].min())
             if ritdata2["VoertuigNr"].min() % 2 != 0:
@@ -69,14 +72,15 @@ with col5:
                         exec(f'tempverbruikvoertuig_{x} = 0.8')
                     key = f"verbruik_input_{x}"
                     keyaccu = f"accu_input_{x}"
-                    keylaad = f"laad_input_{x}"
+                    keylaad = f"laad_input_{x}" 
                     exec(f'verbruikvoertuig_{x} = st.number_input("Energieverbruik voertuig kWh/km", value= tempverbruikvoertuig_{x}, key= key)')
-                    exec(f'accuvoertuig_{x} = st.number_input("Accu capaciteit (kWh)", value= np.round(ritdata2["Accu"].max()).astype(int), key= keyaccu)')
-                    exec(f'laadvoertuig_{x} = st.number_input("Laadsnelheid (kW)", value= np.round(ritdata2["laadsnelheid"].max()).astype(int), key= keylaad)')
-                    exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "Verbruik"] = verbruikvoertuig_{x}')
-                    exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "Accu"] = accuvoertuig_{x}')
-                    exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "laadsnelheid"] = laadvoertuig_{x}')
-                    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata, 0.2, 0.6)
+                    exec(f'accuvoertuig_{x} = st.number_input("Accu capaciteit (kWh)", value= np.round(margemax).astype(int), key= keyaccu)')
+                    exec(f'laadvoertuig_{x} = st.number_input("Laadvermogen (kW)", value= np.round(ritdata2["laadsnelheid"].max()).astype(int), key= keylaad)')
+                    ritdata6 = ritdata.copy()
+                    exec(f'ritdata6.loc[ritdata["VoertuigNr"] == x+1, "Verbruik"] = verbruikvoertuig_{x}')
+                    exec(f'ritdata6.loc[ritdata["VoertuigNr"] == x+1, "Accu"] = accuvoertuig_{x}')
+                    exec(f'ritdata6.loc[ritdata["VoertuigNr"] == x+1, "laadsnelheid"] = laadvoertuig_{x}')
+                    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata6, verbruiklift, verbruikkoeling)
                     ritdata4 = ritdata3[ritdata3["VoertuigNr"] == x+1].reset_index(drop=True)
                     margemax = ritdata4.KMber.max()*ritdata4["Verbruik"].max()*(marge/100)
                     if (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min() < 0:
@@ -94,13 +98,13 @@ with col5:
     with col2:
         for x in range(ritdata["VoertuigNr"].nunique()):
             ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
-            margemax = (ritdata2["Accu"]+ritdata2["EnergieVerbruik"]).min()
-            #exec(f'verbruikvoertuig_{x} = 0') 
+            margemax = ritdata2["Accu"].max()/(1-(marge/100))
+            exec(f'verbruikvoertuig_{x} = 0') 
             #print(ritdata2["VoertuigNr"].min())
             if ritdata2["VoertuigNr"].min() % 2 == 0:
+                voertuig = ritdata2["Type voertuig"][0]
                 tekst = "Voor voertuig " + str(x+1)
                 st.subheader(tekst)
-                voertuig = ritdata2["Type voertuig"][0]
                 st.write(voertuig)
                 with st.expander("Zie specificaties"):
                     #voertuig = ritdata2["Type voertuig"].min()
@@ -115,15 +119,17 @@ with col5:
                         exec(f'tempverbruikvoertuig_{x} = 0.8')
                     key = f"verbruik_input_{x}"
                     keyaccu = f"accu_input_{x}"
-                    keylaad = f"laad_input_{x}"
+                    keylaad = f"laad_input_{x}" 
                     exec(f'verbruikvoertuig_{x} = st.number_input("Energieverbruik voertuig kWh/km", value= tempverbruikvoertuig_{x}, key= key)')
-                    exec(f'accuvoertuig_{x} = st.number_input("Accu capaciteit (kWh)", value= np.round(ritdata2["Accu"].max()).astype(int), key= keyaccu )')
-                    exec(f'laadvoertuig_{x}  = st.number_input("Laadsnelheid (kW)", value= np.round(ritdata2["laadsnelheid"].max()).astype(int), key= keylaad)')
-                    exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "Verbruik"] = verbruikvoertuig_{x}')
-                    exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "Accu"] = accuvoertuig_{x}')
-                    exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "laadsnelheid"] = laadvoertuig_{x}')
-                    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata, 0.2, 0.6)
+                    exec(f'accuvoertuig_{x} = st.number_input("Accu capaciteit (kWh)", value= np.round(margemax).astype(int), key= keyaccu)')
+                    exec(f'laadvoertuig_{x} = st.number_input("Laadvermogen (kW)", value= np.round(ritdata2["laadsnelheid"].max()).astype(int), key= keylaad)')
+                    ritdata6 = ritdata.copy()
+                    exec(f'ritdata6.loc[ritdata["VoertuigNr"] == x+1, "Verbruik"] = verbruikvoertuig_{x}')
+                    exec(f'ritdata6.loc[ritdata["VoertuigNr"] == x+1, "Accu"] = accuvoertuig_{x}')
+                    exec(f'ritdata6.loc[ritdata["VoertuigNr"] == x+1, "laadsnelheid"] = laadvoertuig_{x}')
+                    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata6, verbruiklift, verbruikkoeling)
                     ritdata4 = ritdata3[ritdata3["VoertuigNr"] == x+1].reset_index(drop=True)
+                    margemax = ritdata4.KMber.max()*ritdata4["Verbruik"].max()*(marge/100)
                     if (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min() < 0:
                         st.write(":red[Met deze combinatie van specificaties kunt u uw ritten **niet** uitvoeren]")
                     elif (ritdata4["Accu"]+ritdata4["EnergieVerbruik"].shift(-1)).min() < margemax:
@@ -135,7 +141,7 @@ with col5:
                     #st.dataframe(ritdata[ritdata["VoertuigNr"] == x+1].loc["Accu"])
 
     #st.write(accuvoertuig_1)             
-    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata, 0.2, 0.6)
+    ritdata3, profiel, profielsum = RitDataMeerdereAanpassen(ritdata6, 0.2, 0.6)
     st.session_state.ritdata3 = ritdata3
     st.session_state.profielsum = profielsum
 

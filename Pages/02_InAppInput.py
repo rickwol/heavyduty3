@@ -72,7 +72,7 @@ with col3:
     
     st.write("De keuzes voor uw voertuig en opties hangen samen met het energieverbruik")
     st.write("Wilt u deze inzien en aanpassen, dan kan dit hieronder")
- 
+    Aantallifts = 0
     with st.expander("Zie specificaties"):
         st.write(voertuig)
         if voertuig == 'Medium bakwagen lvm 12 - 18 ton':
@@ -97,6 +97,11 @@ with col3:
             
     st.session_state.opties = verbruikextra
     st.session_state.optiesvoertuig = optiesvoertuig
+    
+    if Aantallifts is not None:
+        st.session_state.aantallifts = Aantallifts
+    
+    
     ###Store inputs in session state
     if "voertuig" not in st.session_state:
         st.session_state.voertuig = 1/verbruikvoertuig

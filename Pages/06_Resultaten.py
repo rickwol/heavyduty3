@@ -125,8 +125,10 @@ with col5:
     #profielsum = profielsummaken(ritdataenkel1) 
 
     ritdata7, profiel, profielsum = RitDataMeerdere(ritdata, st.session_state.voertuig)
-
-
+    ritdata["Functionaliteit"] = st.session_state.optiesvoertuig
+    ritdata["Lifts per uur (indien van toepassing)"] = st.session_state.aantallifts
+    
+    
     st.write("Afhankelijk van uw laadstrategie nemen we uw voertuigspecificaties mee. Wilt uw toch iets anders invullen dan kan dit hieronder")
     #try: 
 
