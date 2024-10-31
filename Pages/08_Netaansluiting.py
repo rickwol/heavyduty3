@@ -99,17 +99,19 @@ with col5:
 
     if (Postcode == "") :
         st.write("U heeft nog geen postcode ingevoerd of de postcode is onbekend") 
+        netcongestie = 0
     else:
-         if Congestie.iloc[0, 2] == 0:
+        netcongestie = Congestie.iloc[0, 2]
+        if Congestie.iloc[0, 2] == 0:
             st.write("Momenteel is er op uw locatie", Postcode, "geen sprake van netcongestie. Er is ook voor de komende termijn voldoende capaciteit beschikbaar")
-         if Congestie.iloc[0, 2] == 1:
+        if Congestie.iloc[0, 2] == 1:
              st.write("Momenteel is er op uw locatie", Postcode, "geen sprake van netcongestie. Maar aansluitingen zien wel beperkt. Neem contact op met uw netbeheerder voor details")
-         if Congestie.iloc[0, 2] == 2:
+        if Congestie.iloc[0, 2] == 2:
              st.write("Momenteel is er op uw locatie", Postcode, "sprake van netcongestie. Er wordt specifiek onderzoek gedaan naar de mogelijkheden")
-         if Congestie.iloc[0, 2] == 3 or Congestie.iloc[0, 2] == 3:
-             st.write("Momenteel is er op uw locatie", Postcode, "sprake van netcongestie. U wordt in de wachtrij geplaatst. Neem contact met u netbeheerder voor meer informatie")
-             st.write("Met mitigerende maatregelen kunt u uw benodigde netaansluiting terugbrengen tot: 3X80A. Hierdoor hoeft u niet lang te wachten op uitbreiding van uw aansluiting.") 
-
+        if Congestie.iloc[0, 2] == 3 or Congestie.iloc[0, 2] == 3:
+            st.write("Momenteel is er op uw locatie", Postcode, "sprake van netcongestie. U wordt in de wachtrij geplaatst. Neem contact met u netbeheerder voor meer informatie")
+            st.write("Met mitigerende maatregelen kunt u uw benodigde netaansluiting terugbrengen tot: 3X80A. Hierdoor hoeft u niet lang te wachten op uitbreiding van uw aansluiting.") 
+    
     ######Buttons voor switch vorige en huidige pagina########
     col3, col4 = st.columns(2)
     with col3:
@@ -119,6 +121,11 @@ with col5:
         if st.button("Volgende"):
             switch_page("overzicht")
 
+            
+####opslaan variabelen
+    st.session_state.netaansluiting = Netaansluiting
+    st.session_state.netaansluitingnieuw = vermogencat
+    st.session_state.netcongestie = netcongestie
 ####################Pagina opmaak ######################        
 with col6:
     st.image("https://i.ibb.co/x5ZPpyq/Progressbar6.png", width=100)    
