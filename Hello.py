@@ -1,8 +1,9 @@
 import streamlit as st
 from st_pages import Page, add_page_title, show_pages
+from streamlit_extras.switch_page_button import switch_page
 
 
-st.set_page_config(page_title=None, page_icon=None, layout="centered", initial_sidebar_state="collapsed", menu_items=None)
+st.set_page_config(page_title=None, page_icon=None, initial_sidebar_state="collapsed", menu_items=None, layout="wide")
 
 ####Header
 from streamlit_navigation_bar import st_navbar
@@ -75,10 +76,10 @@ Door een beperkt aantal stappen te volgen en een keuze te maken over uw laadstra
     unsafe_allow_html=True
 )
 
-st.link_button("Start", "https://heavyduty3-production.up.railway.app/Input")
+#st.page_link("pages/02_InAppInput.py", label = "Input")
 
-# if st.button("Start"):
-#     switch_page("input")
+if st.button("Start"):
+    switch_page("input")
 
 ###design footer
 footer="""<style>
@@ -105,9 +106,7 @@ text-align: center;
 }
 </style>
 <div class="footer">
-<a href= "https://www.tno.nl"><img src="https://i.ibb.co/McjKv1z/TNOlogo.png", width="70" height="60"></a>
-<a href= "https://www.nklnederland.nl"><img src="https://i.ibb.co/rfgPP7T/Logo-NKL-2022.png", width="70" height="60"></a>
-<img src="https://i.ibb.co/K9nnLCx/design.png">
+<img src="https://i.ibb.co/sRP3VPm/design.png">
 </div>
 """
 st.markdown(footer,unsafe_allow_html=True)      
