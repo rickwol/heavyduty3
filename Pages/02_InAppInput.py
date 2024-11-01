@@ -104,7 +104,7 @@ with col3:
     
     ###Store inputs in session state
     if "voertuig" not in st.session_state:
-        st.session_state.voertuig = 1/verbruikvoertuig
+        st.session_state.voertuig = verbruikvoertuig
         st.rerun()
     if "opties" not in st.session_state:
         st.session_state.opties = verbruikextra
