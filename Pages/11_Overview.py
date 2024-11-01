@@ -5,10 +5,14 @@ import plotly.express as px
 import datetime, timedelta
 from streamlit_extras.switch_page_button import switch_page
 from Functions import *
-import smtplib
+import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
+from email.mime.nonmultipart import MIMENonMultipart
+import email.encoders
+from email.message import EmailMessage
+import base64
 
 st.set_page_config(page_title="Overview", page_icon="📈", initial_sidebar_state="collapsed", layout="wide")
 
@@ -17,9 +21,9 @@ ritdata = st.session_state.ritdata3
 if "VoertuigNr" not in ritdata.columns:
     ritdata["VoertuigNr"] = 1
     
-ritdata["Accumax"] = ritdata["Accu"].max()
+ritdata["Accumax"] = ritdata["Accu"].max()/(1-(st.session_state.marge/100)) + ritdata["Energieextra"].sum()
 profielsum = st.session_state.profielsum 
-#st.dataframe(ritdata)
+
 ####Header
 from streamlit_navigation_bar import st_navbar
 
@@ -42,28 +46,6 @@ try:
     with col5: 
         st.title("Overzicht")
 
-
-    #         st.text_area("Input",
-    #                        types)
-    #         #ritten = "Aantal ritten: " + str(len(ritdata2["KM"])) +"\n" + "Maximale lengte rit: " + ritdata2["KM"].max().astype("str")
-    #         #st.text_area("Ritgegeves",
-    #                        #ritten)
-    #         edited_df2 = ritdata
-    #         edited_df2["Rit"] = "Rit"
-    #         edited_df2["Starttijd Rit"] = "1970-01-01 " + edited_df2["Starttijd Rit"]
-    #         edited_df2["Eindtijd Rit"] = "1970-01-01 " + edited_df2["Eindtijd Rit"]
-    #         edited_df2 = edited_df2[["Rit", "Starttijd Rit", "Eindtijd Rit"]]
-    #         fig = px.timeline(edited_df2, x_start ="Starttijd Rit", x_end ="Eindtijd Rit", y= "Rit", height=200)
-    #         fig.update_xaxes(tickformat="%H:%M:%S")
-    #         st.plotly_chart(fig)
-    #         st.text_area("Voertuigen & Laadinfrastructuur",
-    #                        "Omvang van accucapaciteit: .."
-    #                        "Laadsnelheden:")
-
-    #         st.text_area("Netaansluiting",
-    #                        "Het benodigde additionele vermogen is: .."
-    #                        "Uw huidige netaansluiting is:"
-    #                         "Dit is onvoldoende/voldoende")
         col7, col8, col9 = st.columns([2, 2, 2])
 
         with col7: 
@@ -158,35 +140,32 @@ try:
         if st.button("Stuur email"):
             email_sender = 'noreply@etruckplanner.nl'
 
-
+            try: 
     # Hide the password input
             #password = st.text_input('Password', type="password", disabled=True)  
-
-
-            try:
-
-                msg = MIMEMultipart(body)
-                msg['From'] = "noreply@etruckplanner.nl"
-                msg['To'] = email_receiver
+                msg = EmailMessage()
                 msg['Subject'] = subject
-                with open("ResultatenHeavyDuty.pdf", "rb") as f:
-                    attach = MIMEApplication(f.read(),_subtype="pdf")
-                attach.add_header('Content-Disposition','attachment',filename=str("example.pdf"))
-                msg.attach(attach)
-                server = smtplib.SMTP('smtp.strato.com', 587)
-                server.starttls()
-                server.login("76591485@etruckplanner.nl", "fLM68AWxq$jeuM+")####Wachtwoord te updated voor strato
-                server.sendmail(email_sender, email_receiver, msg.as_string())
-                server.quit()
-                st.success('Email sent successfully! 🚀')
+                msg['From'] = email_sender
+                msg['To'] = email_receiver
+                msg.set_content(body)
+                file = "ResultatenHeavyDuty.pdf"
+                with open(file,'rb') as f:
+                    file_data = f.read()
+                    file_name = f.name
+                    msg.add_attachment(file_data, maintype='application', subtype = 'pdf', filename=file_name)
+                with smtplib.SMTP_SSL('smtp.strato.com', 465) as smtp:
+                    smtp.login("noreply@etruckplanner.nl",  "fLM68AWxq$jeuM+")
+                    smtp.send_message(msg)
+                    st.success('Email is verzonden! 🚀')
             except Exception as e:
-                st.error("Failed to send email")
+                 st.error("Failed to send email")
 except:
     st.error("Er is iets mis gegaan, probeert u het opnieuw")
+
     
 with col6:
     st.image("https://i.ibb.co/mJYqJB6/Progressbar7.png", width=100)
-    
+   
         
 ###design footer
 footer="""<style>
