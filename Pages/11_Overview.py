@@ -185,7 +185,7 @@ except:
     st.error("Er is iets mis gegaan, probeert u het opnieuw")
     
 with col6:
-    st.image("https://i.ibb.co/mJYqJB6/Progressbar7.png", width=40)
+    st.image("https://i.ibb.co/mJYqJB6/Progressbar7.png", width=100)
     
         
 ###design footer
