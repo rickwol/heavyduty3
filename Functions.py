@@ -96,8 +96,9 @@ def RitDataMeerdere(ritdata, marge):
 
     ritdata["Energieopladen"] = np.where(ritdata["laadsnelheid"] > 0, ritdata["difftime"] * ritdata["laadsnelheid"], 0)
     ritdata["Accu"] = ritdata.groupby(["VoertuigNr"])["KMber"].transform('max')
-    ritdata["Accu"] = ritdata["Accu"] + ritdata["verbruikextra"].max()
-    ritdata["Accu"] = np.where(ritdata["Rit Nr"] == 1, (ritdata["Accu"]/(1-(marge/100))) * ritdata["Verbruik"], 0)
+    ritdata["verbruikextrasom"] = ritdata.groupby(["VoertuigNr"])["verbruikextra"].transform('sum')
+    ritdata["Accu"] = ritdata["Accu"]/(1-(marge/100)) * ritdata["Verbruik"] + ritdata["verbruikextrasom"]
+    ritdata["Accu"] = np.where(ritdata["Rit Nr"] == 1, ritdata["Accu"], 0)
     
     ###Update profiel laatste rit
     mini = ritdata["Endtime"].max() + datetime.timedelta(hours= ritdata["Energieopladen"][maxi]/ritdata["laadsnelheid"].max())
