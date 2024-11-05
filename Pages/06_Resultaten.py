@@ -156,7 +156,7 @@ with col5:
                     key = f"verbruik_input_{x}"
                     keyaccu = f"accu_input_{x}"
                     keylaad = f"laad_input_{x}"
-                    exec(f'verbruikvoertuig_{x} = st.number_input("Energieverbruik voertuig kWh/km", value= 1/st.session_state.voertuig, key= key)')
+                    exec(f'verbruikvoertuig_{x} = st.number_input("Energieverbruik voertuig kWh/km", value= st.session_state.voertuig, key= key)')
                     exec(f'accuvoertuig_{x} = st.number_input("Accu capaciteit (kWh)", value= accu, key= keyaccu)')
                     exec(f'laadvoertuig_{x} = st.number_input("Laadsnelheid (kW)", value= snelheid, key= keylaad)')
                     exec(f'ritdata.loc[ritdata["VoertuigNr"] == x+1, "Verbruik"] = verbruikvoertuig_{x}')
