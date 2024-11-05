@@ -70,7 +70,7 @@ st.markdown(
     """De tool voor een geïntegreerd advies voor elektrische logistiek. Op basis van ritgegevens krijgt u een advies over de keuze voor elektrische trucks en de bijbehorende laadinfrastructuur.<br><br> Aan de hand van ritprofielen van uw voertuigen krijgt u specifieker advies over de benodigde accucapaciteit van het voertuig en de laadcapaciteit van de infrastructuur.<br><br>Voor de ritprofielen heeft u keuze u voorgeselecteerde ritprofielen, handmatige input in deze app of gebruik te maken van uw eigen ritgegevens middels een simpel format.<br><br>
 Door een beperkt aantal stappen te volgen en een keuze te maken over uw laadstrategie krijgt u direct beter inzicht in de mogelijkheden voor elektrificatie van uw wagenpark. De applicatie neemt u hierin stap voor stap mee. Meer informatie kunt u krijgen door over de (i) tekentjes te gaan. Heeft u toch behoefte aan een volledige handleiding, dan is deze <a href="https://surfdrive.surf.nl/files/index.php/s/DJm2F9LwrIYqdC8">hier</a> te downloaden.<br><br> Dit project is gefinancierd met middelen uit het project Green Transport Delta Elektrificatie en in samenwerking tussen TNO en het Nationaal Kennisplatform Laadinfrastructuur (NKL) tot stand gekomen.
 
-<a href="https://brainporteindhoven.com/nl/ondernemen-en-innoveren/markten/mobility/programmabureau-smart-green-mobility/green-transport-delta-elektrificatie"><img src="https://i.ibb.co/KW5mXPW/GTDElogo.png" alt="GTDElogo" border="0"></a>
+<a href="https://brainporteindhoven.com/nl/ondernemen-en-innoveren/markten/mobility/programmabureau-smart-green-mobility/green-transport-delta-elektrificatie"><img src="https://i.ibb.co/JHc4snw/GTDElogo-removebg-preview.png" alt="GTDElogo" border="0"></a>
 
 """, 
     unsafe_allow_html=True
