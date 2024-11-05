@@ -90,7 +90,7 @@ with col5:
             oplaaddepot = int((kilomterssom*verbruik)/8)
             tekst = "Voor voertuig " + str(x+1)
             st.subheader(tekst)
-            st.write("Accu:", str(np.round(energiedepot)), "kWh")
+            st.write("Accu:", str(np.round(energiedepot+ritdata2["Energieextra"].sum())), "kWh")
             st.write("Range:", str(np.round(energiedepot/ritdata2["Verbruik"].max())), "km")
             st.write("Laadvermogen: ", str(oplaaddepot), "kW")
 
@@ -115,8 +115,8 @@ with col5:
             oplaaddepot = int(np.round(ritdata2["laadsnelheid"].tail(1)))
             tekst = "Voor voertuig " + str(x+1)
             st.subheader(tekst)
-            st.write("Accu:", str(np.round(ritdata2["Accu"].max()/(1-(marge/100)))), "kWh")
-            st.write("Range:", str(np.round((ritdata2["Accu"].max())/(1-(marge/100))/ritdata2["Verbruik"].max())),"km")
+            st.write("Accu:", str(np.round(ritdata2["Accu"][0]-ritdata2["EnergieVerbruik"][0]+ritdata2["Energieextra"].sum())), "kWh")
+            st.write("Range:", str(np.round((ritdata2["Accu"][0]-ritdata2["EnergieVerbruik"][0])/ritdata2["Verbruik"].max())),"km")
             st.write("Laadvermogen: ", str(int(np.round(ritdata2["laadsnelheid"].max()))), "kW")
 
     truckinput = st.radio(

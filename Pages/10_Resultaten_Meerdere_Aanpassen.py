@@ -51,7 +51,7 @@ with col5:
     with col1:
         for x in range(ritdata["VoertuigNr"].nunique()):
             ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
-            margemax = ritdata2["Accu"].max()/(1-(marge/100))
+            margemax = ritdata2["Accu"][0]-ritdata2["EnergieVerbruik"][0]+ritdata2["Energieextra"].sum()
             exec(f'verbruikvoertuig_{x} = 0') 
             #print(ritdata2["VoertuigNr"].min())
             if ritdata2["VoertuigNr"].min() % 2 != 0:
@@ -98,7 +98,7 @@ with col5:
     with col2:
         for x in range(ritdata["VoertuigNr"].nunique()):
             ritdata2 = ritdata[ritdata["VoertuigNr"] == x+1].reset_index(drop=True)
-            margemax = ritdata2["Accu"].max()/(1-(marge/100))
+            margemax = ritdata2["Accu"][0]-ritdata2["EnergieVerbruik"][0]+ritdata2["Energieextra"].sum()
             exec(f'verbruikvoertuig_{x} = 0') 
             #print(ritdata2["VoertuigNr"].min())
             if ritdata2["VoertuigNr"].min() % 2 == 0:
