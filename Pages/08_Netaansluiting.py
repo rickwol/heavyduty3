@@ -96,10 +96,10 @@ with col5:
     Congestie = congestiedatabase[congestiedatabase["postcode"] == Postcode]
 
     st.write("Op basis van uw ritprofiel en het verwachte aantal trucks moet u uw netaansluiting uitbreiden naar minimaal: " + vermogencat) 
-
+    netcongestie = 0
     if (Postcode == "") :
         st.write("U heeft nog geen postcode ingevoerd of de postcode is onbekend") 
-        netcongestie = 0
+
     else:
         try: 
             netcongestie = Congestie.iloc[0, 2]
