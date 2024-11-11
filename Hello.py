@@ -29,7 +29,7 @@ st_navbar(
 
 show_pages(
     [
-        Page("Hello.py", "Heavy Duty Elektrificatie Tool", "🏠"),
+        #Page("Hello.py", "Heavy Duty Elektrificatie Tool", "🏠"),
         # Can use :<icon-name>: or the actual icon
         Page("Pages/01_Input_selectie.py", "Input"),
         #Page("Pages/01_Voertuig_selectie.py", "Voertuig"), 
