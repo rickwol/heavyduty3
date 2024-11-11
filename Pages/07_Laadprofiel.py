@@ -31,8 +31,6 @@ col5, col6, = st.columns([8, 1])
 
 with col5: 
 
-    st.write("Vul hier het rittenpatroon in voor een dag met een maximaal aantal kilometers")
-
 
     Aantaltrucks=  1
 
