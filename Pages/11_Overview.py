@@ -41,8 +41,7 @@ st_navbar(
 )
 col5, col6, = st.columns([8, 1])
 
-
- try: 
+try: 
     with col5: 
         st.title("Overzicht")
 
