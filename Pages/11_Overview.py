@@ -41,7 +41,6 @@ st_navbar(
 )
 col5, col6, = st.columns([8, 1])
 
-
 #try: 
 with col5: 
     st.title("Overzicht")
@@ -107,7 +106,6 @@ with col5:
         pdf.set_font('Open Sans', style="", size=8)
         pdf.multi_cell(200, 10, txt="Bedankt voor het gebruik van de Heavy Duty Charging Tool. In dit bestand vind u de resultaten van de tool in een gemakkelijk overzicht. Per ingevoerd voertuig krijgt u de specificaties waarmee u verder op zoekt kunt gaan naar de optimale afstemming tussen uw voertuig en de laadinfrastructuur.", align="L")
         pdf.cell(200, 10, txt="", ln=1, align="L")
-        pdf.add_page()
         with pdf.text_columns(text_align="J", ncols=2, gutter=5) as cols: 
             for x in range(ritdata["VoertuigNr"].nunique()):
 #                 pdf.set_font('Open Sans', style="B", size=8)
