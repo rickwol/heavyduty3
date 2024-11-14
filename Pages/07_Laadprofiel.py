@@ -53,6 +53,9 @@ with col5:
 
     fig = px.line(df4, x="Tijdstip", y="Load(kW)", title= "Laadprofiel")
     fig.update_xaxes(tickformat="%H:%M:%S")
+    fig.update_layout(yaxis_title="Vermogen (kW)")
+
+    
 
 
     st.plotly_chart(fig)
@@ -71,6 +74,8 @@ with col5:
     if "maxvermogen" not in st.session_state:
         st.session_state.maxvermogen = df4["Load(kW)"].max()
 
+    if "laadprofiel" not in st.session_state:
+        st.session_state.laadprofiel = fig
 with col6:
     st.image("https://i.ibb.co/Cw6Xxkd/Progressbar5.png", width=100)  
 
