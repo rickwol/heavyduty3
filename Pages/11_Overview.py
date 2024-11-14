@@ -26,7 +26,8 @@ if ritdata["VoertuigNr"].max()==1:
     ritdata["Accumax"] = (ritdata["Accu"][0]-ritdata["EnergieVerbruik"][0])/(1-(st.session_state.marge/100))
 
 profielsum = st.session_state.profielsum 
-
+fig = st.session_state.laadprofiel
+fig.write_image("fig1.png")
 ####Header
 from streamlit_navigation_bar import st_navbar
 
@@ -164,7 +165,9 @@ try:
             exec(f'pdf.cell(200, 10, txt=tekst10 , ln=1, align="L")')
             exec(f'pdf.cell(200, 10, txt=tekst11 , ln=1, align="L")')
             exec(f'pdf.cell(200, 10, txt=tekstnetaansluiting , ln=1, align="L")')
-
+            pdf.add_page()
+            pdf.cell(200,10, txt="Een overzicht van uw laadprofiel", ln=1, align="L")
+            pdf.image("fig1.png", w=200)
 
             pdf.output("ResultatenHeavyDuty.pdf")
 
