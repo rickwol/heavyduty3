@@ -19,9 +19,11 @@ st.set_page_config(page_title="Overview", page_icon="📈", initial_sidebar_stat
 #st.sidebar.header("Ritprofielen")
 ritdata = st.session_state.ritdata3
 if "VoertuigNr" not in ritdata.columns:
-    ritdata["VoertuigNr"] = 1
-    
+    ritdata["VoertuigNr"] = 1    
     ritdata["Accumax"] = (ritdata["Accu"][0]+ritdata["EnergieVerbruik"][0])/(1-(st.session_state.marge/100))
+
+if ritdata["VoertuigNr"].max()==1:
+    ritdata["Accumax"] = (ritdata["Accu"][0]-ritdata["EnergieVerbruik"][0])/(1-(st.session_state.marge/100))
 
 profielsum = st.session_state.profielsum 
 
