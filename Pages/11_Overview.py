@@ -87,7 +87,7 @@ try:
             tekstnetaansluiting = tekstnetaansluiting + "sprake van netcongestie bij u in de buurt. "
             tekstnetaansluiting = tekstnetaansluiting + str(np.where(st.session_state.netcongestie > 1, "Neem contact op met uw netbeheerder", " "))
             st.write(tekstnetaansluiting)
-            st.write(st.session_state.netcongestie)
+            
 
         def generate_pdf():
             """Generate an example pdf file and save it to example.pdf"""
