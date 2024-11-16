@@ -179,8 +179,8 @@ with col5:
     ####Opslaan resultaten in geheugen
 
     st.session_state.profielsum = profielsum
-    st.session_state.ritdata3 = ritdata7
-    st.session_state.ritdata2 = ritdata7
+    st.session_state.ritdata3 = ritdata3
+    st.session_state.ritdata2 = ritdata3
 
 
     ######Buttons voor switch vorige en huidige pagina########
