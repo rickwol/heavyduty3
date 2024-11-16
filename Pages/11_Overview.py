@@ -51,7 +51,7 @@ col5, col6, = st.columns([8, 1])
 with col5: 
     st.title("Overzicht")
     col7, col8, col9 = st.columns([2, 2, 2])
-    st.write(st.session_state.marge)
+    #st.write(st.session_state.marge)
     st.dataframe(ritdata)
     with col7: 
         for x in range(ritdata["VoertuigNr"].nunique()):
