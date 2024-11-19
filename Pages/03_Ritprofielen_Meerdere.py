@@ -32,7 +32,7 @@ col3, col4, = st.columns([8, 1])
 
 with col3:
 
-    st.markdown("""Download de excel file om de ritprofielen voor meerdere voertuigen in te vullen. In het huidige formulier staat reeds een voorbeeld ingevuld. Voor een verdere instructie zie de losse <a href="https://icthva-my.sharepoint.com/:b:/g/personal/r_wolbertus_hva_nl/EaeEWQSxE7RFhZXiOHgsQB8Be1mgDanahR6xu5GXhvQMEQ?e=XHYZqp">handleiding</a> of instructies in het tweede tabblad<br><br>
+    st.markdown("""Download de excel file om de ritprofielen voor meerdere voertuigen in te vullen. In het huidige formulier staat reeds een voorbeeld ingevuld. Voor een verdere instructie zie de losse <a href="https://filebrowser-production-98b8.up.railway.app/api/public/dl/cYXEu_yl">handleiding</a> of instructies in het tweede tabblad<br><br>
     Indien het formulier goed is ingevuld krijgt een visuele weergave van het rittenpatroon.
 
     """, unsafe_allow_html=True)
