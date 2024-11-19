@@ -32,7 +32,7 @@ col3, col4, = st.columns([8, 1])
 
 with col3:
 
-    st.markdown("""Download de excel file om de ritprofielen voor meerdere voertuigen in te vullen. In het huidige formulier staat reeds een voorbeeld ingevuld. Voor een verdere instructie zie de losse <a href="https://surfdrive.surf.nl/files/index.php/s/DJm2F9LwrIYqdC8">handleiding</a> of instructies in het tweede tabblad<br><br>
+    st.markdown("""Download de excel file om de ritprofielen voor meerdere voertuigen in te vullen. In het huidige formulier staat reeds een voorbeeld ingevuld. Voor een verdere instructie zie de losse <a href="https://easyupload.io/q70poe">handleiding</a> of instructies in het tweede tabblad<br><br>
     Indien het formulier goed is ingevuld krijgt een visuele weergave van het rittenpatroon.
 
     """, unsafe_allow_html=True)
